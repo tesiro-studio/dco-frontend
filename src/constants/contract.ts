@@ -1,0 +1,3 @@
+export const TCG_CONTRACTS = {
+  Main: '0x9C43DF8555e5429919BE8fc2DE7B9740F81E70e4',
+} as const;

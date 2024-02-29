@@ -1,0 +1,8 @@
+{
+  "name": "zshuffle",
+  "version": "0.0.2",
+  "main": "./cjs/zshuffle_wasm.js",
+  "types": "./cjs/zshuffle_wasm.d.ts",
+  "author": "",
+  "license": "MIT"
+}
