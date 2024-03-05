@@ -7,6 +7,7 @@ import { config } from '@/constants/config.ts'
 import { theme } from '@/theme'
 import RoutesContainer from './routes'
 import '@/i18n';
+import '@fontsource/aladin/400.css';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

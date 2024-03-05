@@ -1,5 +1,6 @@
 import { extendTheme } from "@chakra-ui/react";
 import Button from "./Button";
+import '@fontsource/aladin';
 
 const components = {
   Button,
