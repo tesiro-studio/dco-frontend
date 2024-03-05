@@ -88,8 +88,6 @@ const GameMatchedModal: React.FC<IGameMatchedModal> = ({ open, playing, config }
               <ChakraBox
                 key={'vs'}
                 pos={'absolute'}
-                w={'40vw'}
-                h={'40vh'}
                 animate={{
                   opacity: [0, 1, 1],
                   scale: [3, 2, 1],
@@ -98,17 +96,36 @@ const GameMatchedModal: React.FC<IGameMatchedModal> = ({ open, playing, config }
                   opacity: [1, 0.5, 0],
                   scale: [1, 2, 3],
                 }}
-                bgImage={MatcheVSImg}
-                bgRepeat={'no-repeat'}
-                bgSize={'contain'}
-                bgPos={'center'}
                 zIndex={20}
                 // @ts-ignore no problem in operation, although type error appears.
                 transition={{
                   delay: 0.5,
                   ease: "easeInOut",
                 }}
-              />
+              >
+                <ChakraBox
+                  w={'25vw'}
+                  h={'50vh'}
+                  initial={{ scale: 1.5 }}
+                  animate={{
+                    scale: [1, 1.5, 1, 1.5, 1, 1, 1, 1, 1, 1]
+                  }}
+                  bgImage={MatcheVSImg}
+                  bgRepeat={'no-repeat'}
+                  bgSize={'contain'}
+                  bgPos={'center'}
+                  zIndex={20}
+                  // @ts-ignore no problem in operation, although type error appears.
+                  transition={{
+                    repeatType: 'loop',
+                    repeat: Infinity,
+                    delay: 1,
+                    repeatDelay: 2,
+                    duration: 1,
+                    ease: "easeInOut",
+                  }}
+                />
+              </ChakraBox>
             )}
             {!modalState.playing && (
               <ChakraBox
