@@ -1,10 +1,10 @@
 import { ShuffledCard, ShuffledCards, ZShuffleWorkerParams, ZShuffleWorkerResponse } from "@/types";
-import workerUrl from './worker?worker&url';
-// import ZkShuffleWorker from './worker?worker';
+// import workerUrl from './worker?worker&url';
+import ZkShuffleWorker from './worker?worker';
 import { Hex } from "viem";
 
-// const worker = new ZkShuffleWorker();
-const worker = new Worker(new URL(workerUrl, import.meta.url), { type: 'module' });
+const worker = new ZkShuffleWorker();
+// const worker = new Worker(new URL(workerUrl, import.meta.url), { type: 'module' });
 
 class ZShuffle {
   callback<T> (_name: string): Promise<T> {
