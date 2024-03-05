@@ -5,22 +5,21 @@ import React, { useMemo } from 'react'
 import BoardCard from '@/components/BaseCard/BoardCard';
 import { store } from '@/stores/RootStore';
 import delay from 'delay';
-import { toJS } from 'mobx';
 
 const OpBoardCards: React.FC = () => {
   const { opCardStore, battleStore, boardStore, gameStore } = store;
 
-  const opCardsCanSelected = useMemo(() => {
-    if (battleStore.availableTargets) {
-      const { target } = battleStore.caster ?? battleStore.attacker ?? {};
-      const targets = battleStore.availableTargets.opTargets.filter(ot => `${ot.target}` === target);
-      if (targets.length) {
-        return targets.map(({ revealIndex }) => revealIndex);
-      }
-      return battleStore.availableTargets.opTargets.map(({ revealIndex }) => revealIndex);
-    }
-    return [];
-  }, [battleStore.availableTargets, battleStore.caster?.target]);
+  // const opCardsCanSelected = useMemo(() => {
+  //   if (battleStore.availableTargets) {
+  //     const { target } = battleStore.caster ?? battleStore.attacker ?? {};
+  //     const targets = battleStore.availableTargets.opTargets.filter(ot => `${ot.target}` === target);
+  //     if (targets.length) {
+  //       return targets.map(({ revealIndex }) => revealIndex);
+  //     }
+  //     return battleStore.availableTargets.opTargets.map(({ revealIndex }) => revealIndex);
+  //   }
+  //   return [];
+  // }, [battleStore.availableTargets, battleStore.caster?.target]);
 
   const selectionInfo = useMemo(() => {
     const info = {

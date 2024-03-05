@@ -5,7 +5,7 @@ import tcg from "@/services/tcg";
 import { PulledCardType, BoardCardType, HeroKind, ShuffledCards, CardKind } from "@/types";
 import zhuffle from "@/workers/zshuffle";
 import { RootStore } from "./RootStore";
-import { findAvailableVictims, verifyManaEnough } from "@/utils/action";
+import { verifyManaEnough } from "@/utils/action";
 
 export class MyCards {
   rootStore: RootStore;

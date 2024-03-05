@@ -1,5 +1,5 @@
 import { HeroKind } from '@/types';
-import { Center, VStack, Text, Box } from '@chakra-ui/react';
+import { VStack, Text, Box } from '@chakra-ui/react';
 import React from 'react'
 
 import Rogue from '@/assets/servants/9.png';

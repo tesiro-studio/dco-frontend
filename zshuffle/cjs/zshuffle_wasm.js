@@ -236,10 +236,10 @@ module.exports.index_to_card = function(index) {
 * @param {string} public
 * @returns {any}
 */
-module.exports.public_uncompress = function(public) {
+module.exports.public_uncompress = function(p) {
     try {
         const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
-        const ptr0 = passStringToWasm0(public, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+        const ptr0 = passStringToWasm0(p, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         wasm.public_uncompress(retptr, ptr0, len0);
         var r0 = getInt32Memory0()[retptr / 4 + 0];

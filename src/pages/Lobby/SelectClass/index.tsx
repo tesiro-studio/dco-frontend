@@ -1,4 +1,4 @@
-import { Box, Center, Flex, Text, VStack } from '@chakra-ui/react';
+import { Center, Flex, Text, VStack } from '@chakra-ui/react';
 import React, { useState } from 'react'
 
 import ChakraBox from '@/components/ChakraBox';

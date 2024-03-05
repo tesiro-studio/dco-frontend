@@ -4,7 +4,7 @@ import delay from "delay";
 import { useEffect } from "react";
 
 const useWatchOpTurnEnd = () => {
-  const { roomStore, boardStore, gameStore } = store;
+  const { roomStore, boardStore } = store;
 
   const addTurnActions = async (roomId: bigint, turn: bigint, over: boolean = false) => {
     const { turns } = store.gameStore;

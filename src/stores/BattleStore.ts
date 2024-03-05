@@ -1,7 +1,7 @@
 import { computed, makeAutoObservable, runInAction, toJS } from "mobx";
 import { RootStore } from "./RootStore";
-import { BattleAction, PulledCardType } from "@/types";
-import { findAllOps, findAvailableTargets, findAvailableVictims, findTraitOps } from "@/utils/action";
+import { PulledCardType } from "@/types";
+import { findAvailableTargets, findAvailableVictims } from "@/utils/action";
 import { getCardRealPosition } from "@/utils/game";
 
 type CasterCardType = {

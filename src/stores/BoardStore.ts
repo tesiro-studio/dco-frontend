@@ -5,7 +5,7 @@ import { zeroHash } from "viem";
 
 import { RootStore } from "./RootStore";
 import zhuffle from "@/workers/zshuffle";
-import { convertActionTarget, parseRawAction } from "@/utils/action";
+import { parseRawAction } from "@/utils/action";
 
 export class BoardStore {
   myActions: UploadAction[] = [];
