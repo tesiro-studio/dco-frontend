@@ -1,12 +1,13 @@
 import { CardKind, HeroKind } from '@/types';
 import React, { useMemo } from 'react'
-import { Box, Center } from '@chakra-ui/react';
+import { Box, Center, Flex } from '@chakra-ui/react';
 
 import Rogue from '@/assets/servants/9.png';
 import Warrior from '@/assets/servants/4.png';
 import LightImg from '@/assets/images/light_2.webp';
 import ChakraBox from '@/components/ChakraBox';
 import { CardAttrs } from '@/constants/cards';
+import { Trans } from 'react-i18next';
 
 interface IClassCard {
   classKind: HeroKind;
@@ -73,6 +74,42 @@ const ClassCard: React.FC<IClassCard> = ({ classKind, onClick, selected }) => {
             <Box w={'20%'} h={'0.125rem'} bgGradient={'linear(270deg, rgba(236, 186, 179, 0) 0%, rgba(236, 186, 179, 1) 80%, rgba(236, 186, 179, 1) 100%)'} />
           </Center>
         </Box>
+        <Flex
+          pos={'absolute'}
+          zIndex={5}
+          left={'15%'}
+          right={'15%'}
+          bottom={'8%'}
+          h={'18%'}
+          flexWrap={'nowrap'}
+          justifyContent={'center'}
+          alignItems={'flex-end'}
+        >
+          <Flex
+            gap={'0.25rem'}
+            minW={'24rem'}
+            h={'10rem'}
+            transform={'scale(0.6)'}
+            transformOrigin={'bottom'}
+            alignItems={'center'}
+            textAlign={'left'}
+            fontSize={'1.6rem'}
+            lineHeight={1.2}
+            color={'desc.1'}
+          >
+            <Trans
+              parent={'span'}
+              i18nKey={`card.${classKind === HeroKind.Rogue ? CardKind.EdwinVanCleef : CardKind.KingMosh}.desc`}
+              components={{
+                br: <br />,
+                d1: <Box as={'span'} verticalAlign={'middle'} color={'damage.1'} />,
+                h1: <Box as={'span'} verticalAlign={'middle'} color={'heal.1'} />,
+                d2: <Box as={'span'} verticalAlign={'middle'} color={'damage.2'} />,
+                h2: <Box as={'span'} verticalAlign={'middle'} color={'heal.2'} />
+              }}
+            />
+          </Flex>
+        </Flex>
         <Box
           pos={'absolute'}
           zIndex={2}

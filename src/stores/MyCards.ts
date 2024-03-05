@@ -100,6 +100,12 @@ export class MyCards {
     })
   }
 
+  cancelCardToBoard () {
+    runInAction(() => {
+      this.playedCards = toJS(this.playedCards).slice(0, this.playedCards.length - 1);
+    })
+  }
+
   // async addCardToBoardFromReady () {
   //   const { boardStore } = this.rootStore;
   //   const { card, target } = this.readyToPlay || {};

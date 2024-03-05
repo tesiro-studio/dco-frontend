@@ -7,18 +7,19 @@ import { injected } from 'wagmi/connectors';
 import { AnimatePresence } from 'framer-motion';
 
 import { store } from '@/stores/RootStore';
-// import useGameInit from '@/hooks/useGameInit';
 import ChakraBox from '@/components/ChakraBox';
 import AppButton from '@/components/AppButton';
 import LobbyBgImg from '@/assets/images/lobby-bg.webp';
 import ResourceLoading from './ResourceLoading';
 import SelectClass from './SelectClass';
 import WaitingRoom from './WaitingRoom';
-import BaseCard from '@/components/BaseCard';
+import { opBNBTestnet } from 'viem/chains';
+import { switchChain } from 'wagmi/actions';
+import { config } from '@/constants/config';
 
 const Lobby: React.FC = () => {
   const { roomStore } = store;
-  const { isConnected, address } = useAccount();
+  const { isConnected, address, chainId } = useAccount();
   const [lobbyState, setLobbyState] = useImmer({ init: false });
   // useGameInit();
   const { connect } = useConnect();
@@ -35,6 +36,13 @@ const Lobby: React.FC = () => {
       return (
         <Center flex={1}>
           <AppButton onClick={() => connect({ connector: injected({ target: 'metaMask' }) })}>Connect</AppButton>
+        </Center>
+      );
+    }
+    if (chainId !== opBNBTestnet.id) {
+      return (
+        <Center flex={1}>
+          <AppButton onClick={() => switchChain(config, { chainId: opBNBTestnet.id })}>Switch Network</AppButton>
         </Center>
       );
     }

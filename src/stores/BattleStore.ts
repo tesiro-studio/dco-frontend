@@ -86,6 +86,7 @@ export class BattleStore {
         },
         gameStore.isMyTurn()
       )
+      console.log('--->', targets);
       this.setTargets(targets);
     })
   }

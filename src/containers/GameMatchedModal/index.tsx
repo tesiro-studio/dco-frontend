@@ -1,11 +1,9 @@
-import { Box, Center, Flex, Img, Modal, ModalContent, ModalOverlay } from '@chakra-ui/react';
+import { Center, Modal, ModalContent } from '@chakra-ui/react';
 import React, { useEffect } from 'react'
 import { useImmer } from 'use-immer';
 
-import { store } from '@/stores/RootStore';
 import ChakraBox from '@/components/ChakraBox';
-import { GameConfigType, GameState } from '@/types';
-import AppButton from '@/components/AppButton';
+import { GameConfigType } from '@/types';
 import MatcheLeftImg from '@/assets/images/match_left-bg.webp';
 import MatcheRightImg from '@/assets/images/match_right-bg.webp';
 import MatcheVSImg from '@/assets/images/match_vs.webp';
@@ -27,22 +25,20 @@ const GameMatchedModal: React.FC<IGameMatchedModal> = ({ open, playing, config }
   }, [open]);
 
   useEffect(() => {
-    setModalState(state => {
-      state.playing = playing;
-    })
-  }, [playing]);
-
-  useEffect(() => {
-    if (modalState.playing) {
+    if (!modalState.destory && playing) {
+      setModalState(state => {
+        state.playing = playing;
+      })
       setTimeout(() => {
         setModalState(state => { state.destory = true })
       }, 2000);
     }
-  }, [modalState.playing]);
+  }, [playing]);
 
   if (modalState.destory) {
     return null;
   }
+
   return (
     <Modal autoFocus={false} isCentered isOpen={modalState.open} onClose={() => {}}>
       <ModalContent

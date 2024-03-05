@@ -230,3 +230,13 @@ export const verifyManaEnough = (cardId: CardKind, currentMana: number) => {
   const { cost } = CardAttrs[cardId];
   return currentMana >= cost;
 }
+
+export const checkHasTargetCanSelect = (availableTargets?: ReturnType<typeof findAvailableVictims>) => {
+  const { myHeroCanSelected, myTargets = [], opHeroCanSelected, opTargets = [] } = availableTargets || {};
+  return [
+    myHeroCanSelected,
+    myTargets.length,
+    opHeroCanSelected,
+    opTargets.length,
+  ].some(Boolean);
+}

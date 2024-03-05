@@ -2,6 +2,7 @@
 import GameMatchedModal from '@/containers/GameMatchedModal';
 import { store } from '@/stores/RootStore';
 import { Box, VStack } from '@chakra-ui/react';
+import { AnimatePresence } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import React from 'react'
 import { Outlet } from 'react-router-dom';

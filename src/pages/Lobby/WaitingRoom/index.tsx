@@ -74,7 +74,7 @@ const WaitingRoom: React.FC = () => {
             console.log('--尚未幫對方發牌');
             await tcg.revealStart(store.zkey, roomStore.roomId, gameConfig.myPlayerIndex, !gameConfig.startWithOp);
           }
-          unwatch.current = tcg.watchShuffleRemasked(
+          unwatch.current = tcg.watchReveal(
             roomStore.roomId,
             () => {
               roomStore.check();

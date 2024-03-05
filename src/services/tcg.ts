@@ -196,23 +196,23 @@ class TCG {
     const timer = setInterval(async () => {
       const roomInfo = await this.getCurrentRoomInfo(roomId);
       if (roomInfo.shuffleRemasked[0] && roomInfo.shuffleRemasked[1]) {
-        console.log('watchShuffleRemasked', roomInfo.shuffleRemasked);
-        if (roomInfo.state === GameState.Playing) {
-          callback();
-          clearInterval(timer);
-        }
+        console.log('watchShuffleRemasked', roomInfo.shuffleRemasked, roomInfo.state);
+        callback();
+        clearInterval(timer);
       }
     }, 1000);
     return () => clearInterval(timer);
   }
 
-  watchGame (roomId: bigint, callback: () => void) {
+  watchReveal (roomId: bigint, callback: () => void) {
     const timer = setInterval(async () => {
       const roomInfo = await this.getCurrentRoomInfo(roomId);
       if (roomInfo.shuffleRemasked[0] && roomInfo.shuffleRemasked[1]) {
-        console.log('watchShuffleRemasked', roomInfo.shuffleRemasked);
-        callback();
-        clearInterval(timer);
+        console.log('watchReveal', roomInfo.state);
+        if (roomInfo.state === GameState.Playing) {
+          callback();
+          clearInterval(timer);
+        }
       }
     }, 1000);
     return () => clearInterval(timer);
