@@ -93,6 +93,20 @@ export const findInjuredOps = (cards: BoardCardType[], prefix: number = 0) => {
   return targets;
 }
 
+export const findUninjuredOps = (cards: BoardCardType[], prefix: number = 0) => {
+  const targets: TargetType[] = [];
+  for (const idx in cards) {
+    const { revealIndex } = cards[idx];
+    if (!cards[idx].attrs.injured()) {
+      targets.push({
+        revealIndex,
+        target: +idx + prefix,
+      })
+    }
+  }
+  return targets;
+}
+
 export const findAllOps = (cards: BoardCardType[], prefix: number = 0): TargetType[] => {
   return cards.map(({ revealIndex }, idx) => ({ revealIndex, target: idx + prefix }));
 }
@@ -119,8 +133,8 @@ export const findAvailableVictims = (cardId: CardKind, info: { opCards?: BoardCa
       return result;
     }
     case CardKind.Backstab: {
-      result.opTargets = findInjuredOps(op);
-      result.myTargets = findInjuredOps(my, 7);
+      result.opTargets = findUninjuredOps(op);
+      result.myTargets = findUninjuredOps(my, 7);
       return result;
     }
     case CardKind.Assassinate: {

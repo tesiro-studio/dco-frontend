@@ -21,3 +21,10 @@ export const ChakraText = chakra(motion.text, {
    */
   shouldForwardProp: (prop) => isValidMotionProp(prop) || shouldForwardProp(prop),
 });
+
+export const ChakraImg = chakra(motion.img, {
+  /**
+   * Allow motion props and non-Chakra props to be forwarded.
+   */
+  shouldForwardProp: (prop) => isValidMotionProp(prop) || shouldForwardProp(prop),
+});

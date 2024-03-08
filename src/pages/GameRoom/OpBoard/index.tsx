@@ -57,7 +57,6 @@ const OpBoard: React.FC = () => {
       switch (action.kind) {
         case ActionKind.PlayCard: {
           // 對方出牌步驟： 盤面載入動作, 將手牌對應位置卡牌添上cardId預備做翻牌效果, 從手牌拉出並翻牌, 將卡牌加入盤面並刷新裝態
-          console.log('---->', applyAction, action.nthDrawn);
           await gameStore.applyAction(applyAction);
           opCardStore.playCardFromHand(action.cardId, action.nthDrawn);
           await addCardToBoard(action.nthDrawn, applyAction);

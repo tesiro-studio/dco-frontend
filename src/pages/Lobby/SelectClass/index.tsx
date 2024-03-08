@@ -19,9 +19,12 @@ const SelectClass: React.FC = () => {
   const handleJoinGame = async () => {
     if (address) {
       setJoin(true);
-      await tcg.joinGame(address, roomStore.myHeroSelected, opBNBTestnet.id);
-      await roomStore.check();
-      setJoin(false);
+      try {
+        await tcg.joinGame(address, roomStore.myHeroSelected, opBNBTestnet.id);
+        await roomStore.check();
+      } catch (error) {
+        setJoin(false);
+      }
     }
   }
 
