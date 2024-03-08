@@ -61,7 +61,7 @@ const MyAvatar: React.FC = () => {
 
   return (
     <Center
-      cursor={'pointer'}
+      className="pointer"
       pos={'relative'}
       data-hero="my"
       transform={myAvatarCanSelected ? 'scale(1.05)' : 'scale(1)'}

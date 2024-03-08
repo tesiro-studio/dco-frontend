@@ -63,7 +63,7 @@ const OpAvatar: React.FC = () => {
   return (
     <Center
       data-hero={'op'}
-      cursor={'pointer'}
+      className="pointer"
       onClick={handleClickAvatar}
       pos={'relative'}
       transition={'0.3s'}

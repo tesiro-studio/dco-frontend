@@ -35,7 +35,7 @@ const HandCard = ({ cardId, index, selected = false, onSelect, ml, locked = fals
     <ChakraBox
       ref={ref}
       layout
-      cursor={'pointer'}
+      className='pointer'
       zIndex={selected ? 99 : index}
       bottom={selected ? '40px' : '0'}
       filter={selected ? 'drop-shadow(0px 1px 6px #34eb55)' : 'drop-shadow(1px 6px 6px black)'}

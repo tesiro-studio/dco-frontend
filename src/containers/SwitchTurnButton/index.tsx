@@ -25,7 +25,7 @@ const SwitchTurnButton: React.FC = () => {
         justifyContent={'center'}
         boxSize={'8rem'}
         onClick={handleEndTurn}
-        cursor={'pointer'}
+        className='pointer'
       >
         <Text>END</Text>
         <Text>TURN</Text>
