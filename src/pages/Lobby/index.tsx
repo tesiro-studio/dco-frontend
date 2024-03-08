@@ -16,6 +16,7 @@ import WaitingRoom from './WaitingRoom';
 import { opBNBTestnet } from 'viem/chains';
 import { switchChain } from 'wagmi/actions';
 import { config } from '@/constants/config';
+// import tcg from '@/services/tcg';
 
 const Lobby: React.FC = () => {
   const { roomStore } = store;
@@ -49,6 +50,7 @@ const Lobby: React.FC = () => {
     if (!roomStore.assetsLoaded) {
       return <ResourceLoading key={'load'} />
     }
+    // return <AppButton onClick={() => tcg.quitGame()}>Quit</AppButton>
     return roomStore.joined ? <WaitingRoom key={'waiting'} /> : <SelectClass key={'select'} />;
   }
 

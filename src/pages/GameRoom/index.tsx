@@ -1,5 +1,5 @@
-import { Box, Center, Grid, Image } from '@chakra-ui/react';
-import React, { Fragment, useEffect, useMemo, useState } from 'react'
+import { Box, Center } from '@chakra-ui/react';
+import React, { Fragment, useMemo, useState } from 'react'
 
 import FloorImg from '@/assets/images/floor-texture.webp';
 import BoardImg from '@/assets/images/room-board.webp';
