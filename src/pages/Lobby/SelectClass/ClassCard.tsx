@@ -53,7 +53,7 @@ const ClassCard: React.FC<IClassCard> = ({ classKind, onClick, selected }) => {
         bgSize={'cover'}
         bgPos={'center'}
         bgRepeat={'no-repeat'}
-        cursor={'pointer'}
+        className='pointer'
         onClick={onClick}
         _hover={{
           borderColor: 'border.1',

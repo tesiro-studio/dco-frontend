@@ -1,6 +1,7 @@
 import { defineStyleConfig } from "@chakra-ui/react";
 import ButtonBgImg from '@/assets/images/btn_bg.webp';
 import ButtonDisabledBgImg from '@/assets/images/btn_bg_disabled.webp';
+import cursorHover from '@/assets/icons/cursor-hover.png';
 
 const Button = defineStyleConfig({
   baseStyle: {
@@ -9,7 +10,7 @@ const Button = defineStyleConfig({
     h: 'auto',
     minW: 'auto',
     color: 'font.1',
-    cursor: 'pointer',
+    cursor: `url('${cursorHover}'), pointer`,
   },
   variants: {
     base: {

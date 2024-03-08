@@ -1,5 +1,7 @@
 import { extendTheme } from "@chakra-ui/react";
 import Button from "./Button";
+import cursor from '@/assets/icons/cursor-default.png';
+import cursorHover from '@/assets/icons/cursor-hover.png';
 import '@fontsource/aladin';
 
 const components = {
@@ -15,7 +17,11 @@ export const theme = extendTheme({
         fontFamily: 'Aladin',
         background: '#000',
         overflow: 'hidden',
+        cursor: `url('${cursor}'), auto`,
       },
+      '.pointer': {
+        cursor: `url('${cursorHover}'), pointer`,
+      }
     },
   },
   colors: {
