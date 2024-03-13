@@ -4,7 +4,6 @@ import React, { useMemo } from 'react'
 import BoardCard from '@/components/BaseCard/BoardCard';
 import { store } from '@/stores/RootStore';
 import { BoardCardType } from '@/types';
-import delay from 'delay';
 
 const MyBoardCards: React.FC = () => {
   const { myCardStore, battleStore, boardStore, gameStore } = store;

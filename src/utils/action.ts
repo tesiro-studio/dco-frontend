@@ -95,7 +95,7 @@ export const findAvailableVictims = (cardId: CardKind, info: { opCards?: BoardCa
     opTargets: [] as TargetType[],
     myTargets: [] as TargetType[],
     defaultValue: '',
-    type: '' as 'damage' | 'buff',
+    type: '',
   }
   const my = isMyTurn ? myCards : opCards;
   const op = isMyTurn ? opCards : myCards;
@@ -195,6 +195,7 @@ export const findAvailableTargets = (isMyTurn: boolean, info: { opCards?: BoardC
     opTargets: [] as TargetType[],
     myTargets: [] as TargetType[],
     defaultValue: '',
+    type: '',
   }
   if (isMyTurn) {
     result.opTargets = findTraitOps(opCards);

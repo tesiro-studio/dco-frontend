@@ -36,13 +36,13 @@ const useHandleSkillEffect = (attacker: CasterCardType | null, animate: any): At
           state.left = left ?? 0;
           state.top = top ?? 0;
         })
-        // await Promise.all([
-        //   animate(
-        //     targetSelector,
-        //     { x: [0, 0, 0, 0, -10, 10, -10, 10, 0, 0, 0, 0] },
-        //     { duration: 1, delay: 1 }
-        //   )
-        // ])
+        await Promise.all([
+          animate(
+            targetSelector,
+            { x: [0, 0, 0, 0, -10, 10, -10, 10, 0, 0, 0, 0] },
+            { duration: 1, delay: 1 }
+          )
+        ])
         await battleStore.casterEffectReady();
         battleStore.done()
       } else {

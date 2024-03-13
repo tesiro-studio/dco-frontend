@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import { Center, Img } from '@chakra-ui/react';
 import { observer } from 'mobx-react-lite';
-import delay from 'delay';
 
 import AvatarBg from '@/assets/images/avatar-bg.webp';
 import LivesImg from '@/assets/icons/lives.png';

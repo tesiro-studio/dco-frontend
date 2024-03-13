@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Center, Img } from '@chakra-ui/react';
 import { observer } from 'mobx-react-lite';
-import delay from 'delay';
 
 import { store } from '@/stores/RootStore';
 import Value from '@/components/Value';
@@ -9,7 +8,6 @@ import { HeroKind } from '@/types';
 import ChakraBox from '@/components/ChakraBox';
 import HeroSkill from '@/components/HeroSkill';
 import HeroShield from '@/components/HeroStats/HeroShield';
-import BuffImg from '@/assets/images/buff.png';
 import AvatarBg from '@/assets/images/avatar-bg.webp';
 import LivesImg from '@/assets/icons/lives.png';
 import Rogue from '@/assets/servants/9.png';
