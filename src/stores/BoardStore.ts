@@ -188,4 +188,22 @@ export class BoardStore {
       this.uploadActions.push(action);
     })
   }
+
+  async addHeroSkillAction () {
+    const { gameStore } = this.rootStore;
+    const action = {
+      kind: ActionKind.HeroSkill,
+      cardId: 0,
+      params: 0,
+      nthDrawn: 0,
+      stateHash: zeroHash,
+      rtoken: [0, 0],
+    };
+    const applyAction = parseRawAction(action);
+    const { boardHashAfter } = await gameStore.applyAction(applyAction);
+    action.stateHash = boardHashAfter;
+    runInAction(() => {
+      this.myActions.push(action);
+    })
+  }
 }

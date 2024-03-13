@@ -4,7 +4,7 @@ import { PulledCardType } from "@/types";
 import { findAvailableTargets, findAvailableVictims } from "@/utils/action";
 import { getCardRealPosition } from "@/utils/game";
 
-type CasterCardType = {
+export type CasterCardType = {
   top: number;
   left: number;
   card: PulledCardType;
@@ -23,6 +23,7 @@ export type AttackerType = {
 export class BattleStore {
   attacker: AttackerType | null = null;
   caster: CasterCardType | null = null;
+  buff: string | 'my' | 'op' = '';
 
   availableTargets: ReturnType<typeof findAvailableVictims> | null = null;
 
@@ -47,6 +48,7 @@ export class BattleStore {
   setAttacker (card: PulledCardType, from: 'my' | 'op') {
     const { opCardStore, myCardStore, gameStore } = this.rootStore;
     runInAction(() => {
+      this.buff = '';
       this.caster = null;
       this.attacker = {
         card,
@@ -69,6 +71,7 @@ export class BattleStore {
     const { opCardStore, myCardStore, gameStore } = this.rootStore;
     runInAction(() => {
       const { left, top } = getCardRealPosition(card.revealIndex);
+      this.buff = '';
       this.attacker = null;
       this.caster = {
         left,
@@ -86,7 +89,6 @@ export class BattleStore {
         },
         gameStore.isMyTurn()
       )
-      console.log('--->', targets);
       this.setTargets(targets);
     })
   }
@@ -125,25 +127,19 @@ export class BattleStore {
     }
   }
 
-  // async attackerEffectReady () {
-  //   const { boardStore, myCardStore } = this.rootStore;
-  //   const { card, target } = this.attacker || {};
-  //   if (card && this.availableTargets) {
-  //     await this.attacker?.callback?.();
-  //     const idx = myCardStore.boardCards.findIndex(({ revealIndex }) => card.revealIndex === revealIndex);
-  //     await boardStore.addMyAttackAction(idx, target ? +target : +this.availableTargets.defaultValue);
-  //     this.action = {
-  //       opHero: 
-  //     };
-  //   }
-  // }
+  async setBuff (target: string | 'my' | 'op') {
+    runInAction(() => {
+      this.done();
+      this.buff = target;
+    })
+  }
 
   done () {
     runInAction(() => {
-      console.log('done', toJS(this.availableTargets));
       this.attacker = null;
       this.caster = null;
       this.availableTargets = null;
+      this.buff = '';
     })
   }
 }

@@ -58,6 +58,9 @@ const OpBoard: React.FC = () => {
         case ActionKind.PlayCard: {
           // 對方出牌步驟： 盤面載入動作, 將手牌對應位置卡牌添上cardId預備做翻牌效果, 從手牌拉出並翻牌, 將卡牌加入盤面並刷新裝態
           await gameStore.applyAction(applyAction);
+          console.log('applyAction:', applyAction);
+          // battleStore.setCaster({ cardId: Number(id), revealIndex }, 'op');
+          // battleStore.confirmTarget(`${applyAction.target}`);
           opCardStore.playCardFromHand(action.cardId, action.nthDrawn);
           await addCardToBoard(action.nthDrawn, applyAction);
           opCardStore.addCardsToBoard([{ cardId: action.cardId, revealIndex: action.nthDrawn, turn: gameStore.turns }]);
@@ -81,7 +84,14 @@ const OpBoard: React.FC = () => {
           battleStore.setAttacker({ cardId: Number(id), revealIndex }, 'op');
           battleStore.confirmTarget(`${applyAction.target}`);
           console.log('applyAction.target:', applyAction.target);
-          // battleStore.selectTarget(target, `${revealIndex}`);
+          // boardStore.completeOpAction(); 移到useHandleCardBattle處理
+          break;
+        }
+        case ActionKind.HeroSkill: {
+          battleStore.setBuff('op');
+          await delay(1500);
+          await gameStore.applyAction(applyAction);
+          await boardStore.completeOpAction();
           break;
         }
         default: {

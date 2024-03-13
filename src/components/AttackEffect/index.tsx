@@ -1,6 +1,6 @@
 import React from 'react'
 
-import AttackImg from '@/assets/status/attack.png';
+import AttackImg from '@/assets/status/attack_hit.png';
 import { Box } from '@chakra-ui/react';
 import ChakraBox from '../ChakraBox';
 

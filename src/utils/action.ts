@@ -1,6 +1,5 @@
 import { ActionKind, BoardCardType, CardKind, UploadAction } from "@/types";
 import { Action } from "@/model/Game";
-import { Hero } from "@/model/Hero";
 import { CardAttrs } from "@/constants/cards";
 
 export const parseRawAction = (rawAction: UploadAction): Action => {
@@ -30,40 +29,12 @@ export const parseRawAction = (rawAction: UploadAction): Action => {
     case ActionKind.EndTurn: {
       return { kind: ActionKind.EndTurn };
     }
+    case ActionKind.HeroSkill: {
+      return { kind: ActionKind.HeroSkill };
+    }
   }
   return { kind: ActionKind.Defeat }
 };
-
-
-export const convertActionTarget = (cardId: CardKind, info: { opCards?: BoardCardType[], myCards?: BoardCardType[], myHero?: Hero, opHero?: Hero } ) => {
-  switch (cardId) {
-    case CardKind.Spellbreaker: {
-      // 沈默
-      const { opCards } = info;
-      const idx = opCards?.findIndex(card => card.attrs.trait === BigInt(3)) ?? -1;
-      return idx >= 0 ? idx : (opCards?.[0] ? 0 : 14);
-    }
-    case CardKind.VoodooDoctor: {
-      // healing
-      const { myCards, myHero } = info;
-      const injuredCard = myCards?.findIndex(card => card.attrs.injured()) ?? -1;
-      return myHero?.hp !== BigInt(30) ? 8 : injuredCard;
-    }
-    case CardKind.ElvenArcher: {
-      return 0; // 攻擊對方英雄
-    }
-    case CardKind.EarthenRingFarseer: {
-      const { myCards, myHero } = info;
-      const injuredCard = myCards?.findIndex(card => card.attrs.injured()) ?? -1;
-      return myHero?.hp !== BigInt(30) ? 8 : injuredCard;
-    }
-    case CardKind.DarkIronDwarf: {
-      const { myCards, opCards } = info;
-      return myCards?.length ? 7 : (opCards?.length ? 0 : 14)
-    }
-  }
-  return 0;
-}
 
 export const findTraitOps = (cards: BoardCardType[]) => {
   const targets: TargetType[] = [];
@@ -124,12 +95,13 @@ export const findAvailableVictims = (cardId: CardKind, info: { opCards?: BoardCa
     opTargets: [] as TargetType[],
     myTargets: [] as TargetType[],
     defaultValue: '',
+    type: '' as 'damage' | 'buff',
   }
   const my = isMyTurn ? myCards : opCards;
   const op = isMyTurn ? opCards : myCards;
   switch (cardId) {
     case CardKind.Charge: {
-      result.myTargets = findAllOps(my)
+      result.myTargets = findAllOps(my);
       return result;
     }
     case CardKind.Backstab: {

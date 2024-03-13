@@ -8,6 +8,7 @@ import { store } from "@/stores/RootStore";
 import { parseRawAction } from "@/utils/action";
 import { getGameConfig } from "@/utils/game";
 import { ActionKind, PulledCardType } from "@/types";
+import { runInAction } from "mobx";
 
 const useRecoverGame = (turns: number) => {
   const { address = ZeroAddress } = useAccount();
@@ -48,8 +49,10 @@ const useRecoverGame = (turns: number) => {
         opCardStore.addCardsToBoard(allOpPlayedCard);
         myCardStore.addCardsToBoard(allMyPlayedCard);
       }
-      state.actionInit = true;
-      state.recovering = false;
+      runInAction(() => {
+        state.actionInit = true;
+        state.recovering = false;
+      })
     },
     async recoverHandCards() {
       if (state.recovering || !roomStore.roomInfo) { return; }
@@ -57,8 +60,10 @@ const useRecoverGame = (turns: number) => {
       const turn = Number(roomStore.roomInfo.turns);
       await myCardStore.pullCard(turn);
       await opCardStore.pullCard(turn);
-      state.cardsInit = true;
-      state.recovering = false;
+      runInAction(() => {
+        state.cardsInit = true;
+        state.recovering = false;
+      })
     }
   }));
 

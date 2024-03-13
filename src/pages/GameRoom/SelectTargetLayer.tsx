@@ -9,13 +9,13 @@ import { useAnimate } from 'framer-motion';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react'
 
-interface IMySelectTargetCard {
+interface ISelectTargetLayer {
   left: number;
   top: number;
   cardId: CardKind;
 }
 
-const MySelectTargetCard: React.FC<IMySelectTargetCard> = ({ left, top, cardId }) => {
+const SelectTargetLayer: React.FC<ISelectTargetLayer> = ({ left, top, cardId }) => {
   const { battleStore, myCardStore } = store;
   const [scope, animate] = useAnimate();
 
@@ -60,12 +60,13 @@ const MySelectTargetCard: React.FC<IMySelectTargetCard> = ({ left, top, cardId }
       <Box
         ref={scope}
         pointerEvents={'none'}
-        zIndex={20}
+        zIndex={100}
         pos={'fixed'}
         left={left}
         top={top}
         transform={'scale(1.32)'}
         transformOrigin={'top left'}
+        filter={'drop-shadow(-2px 7px 9px black)'}
       >
         <BaseCard cardId={cardId} />
       </Box>
@@ -93,4 +94,4 @@ const MySelectTargetCard: React.FC<IMySelectTargetCard> = ({ left, top, cardId }
   )
 };
 
-export default observer(MySelectTargetCard);
+export default observer(SelectTargetLayer);

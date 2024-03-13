@@ -1,5 +1,7 @@
 import { Box, Center } from '@chakra-ui/react';
 import React, { Fragment, useMemo, useState } from 'react'
+import { observer } from 'mobx-react-lite';
+import { AnimatePresence, useAnimate } from 'framer-motion';
 
 import FloorImg from '@/assets/images/floor-texture.webp';
 import BoardImg from '@/assets/images/room-board.webp';
@@ -9,28 +11,41 @@ import OpBoard from './OpBoard';
 import MyBoard from './MyBoard';
 import useRecoverGame from '@/hooks/useRecoverGame';
 import useWatchOpTurnEnd from '@/hooks/useWatchOpTurnEnd';
-import useHandleCardBattle from '@/hooks/useHandleCardBattle';
-import { observer } from 'mobx-react-lite';
+import useHandleHitEffect from '@/hooks/useHandleHitEffect';
 import YourTurn from '@/containers/YourTurn';
 import GameOverModal from '@/containers/GameOverModal';
 import AttackEffect from '@/components/AttackEffect';
-import { AnimatePresence } from 'framer-motion';
 import ChakraBox, { ChakraImg } from '@/components/ChakraBox';
+import useExecuteMyActions from '@/hooks/useExecuteMyActions';
+import SelectTargetLayer from './SelectTargetLayer';
+import SkillEffect from '@/components/SkillEffect';
+import useHandleSkillEffect from '@/hooks/useHandleSkillEffect';
 
 const GameRoom: React.FC = () => {
+  const [scope, animate] = useAnimate();
   const { roomStore, battleStore } = store;
   const [boardLaunched, setBoardLaunched] = useState(false);
   const { actionInit, cardsInit } = useRecoverGame(Number(roomStore.roomInfo?.turns));
   useWatchOpTurnEnd();
-  const [scope, attacked] = useHandleCardBattle(battleStore.attacker);
-  const isGameInited = useMemo(() => actionInit && cardsInit, [actionInit, cardsInit])
+  useExecuteMyActions();
+  const hitAttacked = useHandleHitEffect(battleStore.attacker, animate);
+  const skillAttacked = useHandleSkillEffect(battleStore.caster, animate);
+  const isGameInited = useMemo(() => actionInit && cardsInit, [actionInit, cardsInit]);
 
   return (
-    <Center w={'100vw'} h={'100vh'} bgImage={FloorImg} bgRepeat={'no-repeat'} bgSize={'cover'}>
+    <Center w={'100vw'} ref={scope} h={'100vh'} bgImage={FloorImg} bgRepeat={'no-repeat'} bgSize={'cover'}>
       <Center h={'90%'} pos={'relative'}>
+        {battleStore.caster?.from === 'my' && (
+          <SelectTargetLayer
+            left={battleStore.caster.left}
+            top={battleStore.caster.top}
+            cardId={battleStore.caster.card.cardId}
+          />
+        )}
         {boardLaunched && (
           <Fragment>
-            {attacked.show && <AttackEffect top={attacked.top} left={attacked.left} size='8rem' />}
+            {hitAttacked.show && <AttackEffect top={hitAttacked.top} left={hitAttacked.left} size='8rem' />}
+            {/* {skillAttacked.show && <SkillEffect top={skillAttacked.top} left={skillAttacked.left} size='8rem' />} */}
             <YourTurn key={'turn'} />
             <GameOverModal key={'over'} />
             <Box pos={'absolute'} zIndex={11} right={'6.5%'} top={'calc(50% - 4rem)'}>
@@ -38,7 +53,7 @@ const GameRoom: React.FC = () => {
             </Box>
           </Fragment>
         )}
-        <AnimatePresence mode='wait'>
+        <AnimatePresence mode='popLayout'>
           {boardLaunched && (
             <ChakraBox
               key={'wholeboard'}
@@ -56,7 +71,6 @@ const GameRoom: React.FC = () => {
               `}
               gridTemplateColumns={'200px 300px 1fr 300px 200px'}
               gridTemplateRows={'200px 1fr 1fr 200px'}
-              ref={scope}
             >
               <OpBoard />
               <MyBoard />

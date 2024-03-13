@@ -71,9 +71,9 @@ const OpBoardCards: React.FC = () => {
       const { target = 0 } = battleStore.availableTargets.opTargets.find(ot => ot.revealIndex === revealIndex) ?? {};
       battleStore.confirmTarget(`${target}`);
       if (battleStore.caster) {
-        await delay(500);
-        await battleStore.casterEffectReady();
-        battleStore.done()
+        // await delay(500);
+        // await battleStore.casterEffectReady();
+        // battleStore.done()
       }
     }
   }

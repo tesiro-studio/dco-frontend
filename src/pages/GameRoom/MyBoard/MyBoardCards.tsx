@@ -81,9 +81,9 @@ const MyBoardCards: React.FC = () => {
     if (battleStore.caster) {
       const { target = 0 } = battleStore.availableTargets?.myTargets.find(mt => mt.revealIndex === card.revealIndex) ?? {};
       battleStore.confirmTarget(`${target}`);
-      await delay(500);
-      await battleStore.casterEffectReady();
-      battleStore.done();
+      // await delay(500);
+      // await battleStore.casterEffectReady();
+      // battleStore.done();
     }
     // }
   }
