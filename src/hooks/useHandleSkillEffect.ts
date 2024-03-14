@@ -1,6 +1,5 @@
 import { CasterCardType } from "@/stores/BattleStore";
 import { store } from "@/stores/RootStore";
-import { toJS } from "mobx";
 import { useEffect } from "react";
 import { useImmer } from "use-immer";
 
