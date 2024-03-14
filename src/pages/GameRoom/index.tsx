@@ -14,11 +14,11 @@ import useWatchOpTurnEnd from '@/hooks/useWatchOpTurnEnd';
 import useHandleHitEffect from '@/hooks/useHandleHitEffect';
 import YourTurn from '@/containers/YourTurn';
 import GameOverModal from '@/containers/GameOverModal';
-import AttackEffect from '@/components/AttackEffect';
 import ChakraBox, { ChakraImg } from '@/components/ChakraBox';
 import useExecuteMyActions from '@/hooks/useExecuteMyActions';
 import SelectTargetLayer from './SelectTargetLayer';
-import SkillEffect from '@/components/SkillEffect';
+import SkillEffect from '@/components/Effect/SkillEffect';
+import AttackEffect from '@/components/Effect/AttackEffect';
 import useHandleSkillEffect from '@/hooks/useHandleSkillEffect';
 
 const GameRoom: React.FC = () => {
@@ -44,7 +44,7 @@ const GameRoom: React.FC = () => {
         )}
         {boardLaunched && (
           <Fragment>
-            {hitAttacked.show && <AttackEffect top={hitAttacked.top} left={hitAttacked.left} size='8rem' />}
+            {hitAttacked.show && <AttackEffect top={hitAttacked.top} left={hitAttacked.left} />}
             {skillAttacked.show && <SkillEffect top={skillAttacked.top} left={skillAttacked.left} />}
             <YourTurn key={'turn'} />
             <GameOverModal key={'over'} />
