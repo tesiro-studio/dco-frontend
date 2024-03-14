@@ -81,7 +81,7 @@ class TCG {
           const receipt = await waitForTransactionReceipt(config, { hash: txHash });
           console.log('receipt:', receipt);
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       }
       return true;

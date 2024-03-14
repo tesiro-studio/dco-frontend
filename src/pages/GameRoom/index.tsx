@@ -45,7 +45,7 @@ const GameRoom: React.FC = () => {
         {boardLaunched && (
           <Fragment>
             {hitAttacked.show && <AttackEffect top={hitAttacked.top} left={hitAttacked.left} size='8rem' />}
-            {skillAttacked.show && <SkillEffect top={skillAttacked.top} left={skillAttacked.left} size='8rem' />}
+            {skillAttacked.show && <SkillEffect top={skillAttacked.top} left={skillAttacked.left} />}
             <YourTurn key={'turn'} />
             <GameOverModal key={'over'} />
             <Box pos={'absolute'} zIndex={11} right={'6.5%'} top={'calc(50% - 4rem)'}>
