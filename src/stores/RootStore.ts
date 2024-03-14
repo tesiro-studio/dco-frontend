@@ -24,7 +24,8 @@ export class RootStore {
   }
 
   init () {
-    this.roomStore = new RoomStore(this);
+    // this.roomStore = new RoomStore(this);
+    this.roomStore = new RoomStore(this, this.roomStore?.assetsLoaded);
     this.myCardStore = new MyCards(this);
     this.opCardStore = new OpCards(this);
     this.boardStore = new BoardStore(this);

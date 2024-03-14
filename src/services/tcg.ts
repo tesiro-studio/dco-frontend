@@ -77,7 +77,7 @@ class TCG {
         console.log(+idx + (isPlayFirst ? 4 : 0), rToken);
         // revealStart(uint256 index, (uint256[2] card, bytes proof))
         try {
-          const txHash = await write('revealStart', [BigInt(+idx + (isPlayFirst ? 4 : 0)), rToken]);
+          const txHash = await write('revealStart', [BigInt(+idx + (isPlayFirst ? 4 : 0)), rToken], '400000');
           const receipt = await waitForTransactionReceipt(config, { hash: txHash });
           console.log('receipt:', receipt);
         } catch (error) {

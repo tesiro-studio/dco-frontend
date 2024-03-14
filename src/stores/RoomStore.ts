@@ -18,7 +18,7 @@ export class RoomStore {
   fetched: boolean = false;
 
   rootStore: RootStore;
-  constructor (rootStore: RootStore) {
+  constructor (rootStore: RootStore, loaded: boolean = false) {
     makeAutoObservable(this, {
       roomInfo: observable.struct,
       joined: computed,
@@ -27,6 +27,7 @@ export class RoomStore {
       rootStore: false,
     });
     this.rootStore = rootStore;
+    this.assetsLoaded = loaded;
   }
 
   get config () {

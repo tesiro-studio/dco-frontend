@@ -11,12 +11,15 @@ export type ViewFuctionNames = ExtractAbiFunctionNames<typeof TCG_VIEW_ABI, 'pur
 export type MainFuctionNames = ExtractAbiFunctionNames<typeof TCG_MAIN_ABI, 'payable' | 'nonpayable'>;
 export type ViewReturnType<T extends ViewFuctionNames> = AbiParametersToPrimitiveTypes<ExtractAbiFunction<typeof TCG_VIEW_ABI, T>['outputs'], 'outputs'>
 
-export const write = async (functionName: MainFuctionNames, args: (string | bigint | Record<string, any>)[]) => {
+export const write = async (functionName: MainFuctionNames, args: (string | bigint | Record<string, any>)[], gasLimit?: string) => {
+  const additional = {} as Record<string, string>;
+  if (gasLimit) additional.gas = gasLimit
   return writeContract(config, {
     abi: TCG_MAIN_ABI,
     address: TCG_CONTRACTS.Main,
     functionName,
     args: args as any,
+    ...additional
   })
 }
 

@@ -101,30 +101,36 @@ export const findAvailableVictims = (cardId: CardKind, info: { opCards?: BoardCa
   const op = isMyTurn ? opCards : myCards;
   switch (cardId) {
     case CardKind.Charge: {
+      result.type = 'buff';
       result.myTargets = findAllOps(my);
       return result;
     }
     case CardKind.Backstab: {
+      result.type = 'damage';
       result.opTargets = findUninjuredOps(op);
       result.myTargets = findUninjuredOps(my, 7);
       return result;
     }
     case CardKind.Assassinate: {
+      result.type = 'damage';
       result.opTargets = findAllOps(op);
       return result;
     }
     case CardKind.Betrayal: {
+      result.type = 'damage';
       result.opTargets = findAllOps(op);
       return result;
     }
     case CardKind.Eviscerate: {
+      result.type = 'damage';
       result.myHeroCanSelected = '8';
       result.opHeroCanSelected = '0';
       result.opTargets = findAllOps(op, 1);
-      result.myTargets = findAllOps(my, 9);
+      result.myTargets = findAllOps(my, 9)
       return result;
     }
     case CardKind.Spellbreaker: {
+      result.type = 'debuff';
       // 沈默
       result.opTargets = findTraitOps(op);
       if (result.opTargets.length) {
@@ -144,6 +150,7 @@ export const findAvailableVictims = (cardId: CardKind, info: { opCards?: BoardCa
     case CardKind.EarthenRingFarseer:
     case CardKind.VoodooDoctor: {
       // healing
+      result.type = 'buff';
       result.myTargets = findInjuredOps(my, 9);
       result.myHeroCanSelected = '8';
       // if (isMyTurn) {
@@ -157,6 +164,7 @@ export const findAvailableVictims = (cardId: CardKind, info: { opCards?: BoardCa
       return result;
     }
     case CardKind.ShatteredSunCleric: {
+      result.type = 'buff';
       result.myTargets = findAllOps(my);
       if (!result.myTargets.length) {
         result.defaultValue = '7';
@@ -164,6 +172,7 @@ export const findAvailableVictims = (cardId: CardKind, info: { opCards?: BoardCa
       return result;
     }
     case CardKind.DarkIronDwarf: {
+      result.type = 'buff';
       result.opTargets = findAllOps(op);
       result.myTargets = findAllOps(my, 7);
 
@@ -173,6 +182,7 @@ export const findAvailableVictims = (cardId: CardKind, info: { opCards?: BoardCa
       return result;
     }
     case CardKind.ElvenArcher: {
+      result.type = 'damage';
       // targe: 0, op: 8, my: 0
       result.myHeroCanSelected = '8';
       result.opHeroCanSelected = '0';

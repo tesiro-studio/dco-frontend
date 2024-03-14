@@ -48,11 +48,11 @@ const YourTurn: React.FC = () => {
         <ChakraBox
           pos={'relative'}
           animate={{
-            scale: [0, 1.4, 1.2, 1.2],
+            scale: [0, 1.6, 1.4, 1.4],
             opacity: [0, 1, 1, 1],
           }}
           exit={{
-            scale: [1.2, 2, 2, 2],
+            scale: [1.4, 2, 2, 2],
           }}
           display={'flex'}
           justifyContent={'center'}
@@ -73,7 +73,7 @@ const YourTurn: React.FC = () => {
             }}
             zIndex={18}
           >
-            <Img src={LightImg1} boxSize={'14rem'} />
+            <Img src={LightImg1} boxSize={'15rem'} />
           </ChakraBox>
           <ChakraBox
             pos={'absolute'}
@@ -88,7 +88,7 @@ const YourTurn: React.FC = () => {
             }}
             zIndex={19} 
           >
-            <Img src={LightImg2} boxSize={'14rem'}/>
+            <Img src={LightImg2} boxSize={'15rem'}/>
           </ChakraBox>
         </ChakraBox>
       </ModalContent>

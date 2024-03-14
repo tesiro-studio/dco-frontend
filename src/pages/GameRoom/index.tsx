@@ -18,8 +18,8 @@ import AttackEffect from '@/components/AttackEffect';
 import ChakraBox, { ChakraImg } from '@/components/ChakraBox';
 import useExecuteMyActions from '@/hooks/useExecuteMyActions';
 import SelectTargetLayer from './SelectTargetLayer';
-// import SkillEffect from '@/components/SkillEffect';
-// import useHandleSkillEffect from '@/hooks/useHandleSkillEffect';
+import SkillEffect from '@/components/SkillEffect';
+import useHandleSkillEffect from '@/hooks/useHandleSkillEffect';
 
 const GameRoom: React.FC = () => {
   const [scope, animate] = useAnimate();
@@ -29,7 +29,7 @@ const GameRoom: React.FC = () => {
   useWatchOpTurnEnd();
   useExecuteMyActions();
   const hitAttacked = useHandleHitEffect(battleStore.attacker, animate);
-  // const skillAttacked = useHandleSkillEffect(battleStore.caster, animate);
+  const skillAttacked = useHandleSkillEffect(battleStore.caster, animate);
   const isGameInited = useMemo(() => actionInit && cardsInit, [actionInit, cardsInit]);
 
   return (
@@ -45,7 +45,7 @@ const GameRoom: React.FC = () => {
         {boardLaunched && (
           <Fragment>
             {hitAttacked.show && <AttackEffect top={hitAttacked.top} left={hitAttacked.left} size='8rem' />}
-            {/* {skillAttacked.show && <SkillEffect top={skillAttacked.top} left={skillAttacked.left} size='8rem' />} */}
+            {skillAttacked.show && <SkillEffect top={skillAttacked.top} left={skillAttacked.left} size='8rem' />}
             <YourTurn key={'turn'} />
             <GameOverModal key={'over'} />
             <Box pos={'absolute'} zIndex={11} right={'6.5%'} top={'calc(50% - 4rem)'}>
