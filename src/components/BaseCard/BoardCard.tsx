@@ -1,89 +1,61 @@
 import ActiveCard from '@/components/BaseCard/ActiveCard';
 import ChakraBox from '@/components/ChakraBox';
 import React, { useMemo } from 'react'
-import { BoardCardType } from '@/types';
+import { BoardCardType, EffectType } from '@/types';
+import { getEffectShadowColor } from '@/utils/action';
 
 interface IBoardCard {
+  effect?: EffectType,
+  isTarget?: boolean,
+  canSelected?: boolean,
+  canAttack?: boolean,
+
   boardCard: BoardCardType;
-  selectors?: number[];
   op?: boolean;
   thisTurn?: boolean;
   onSelect?: () => void;
-  isDefender: boolean;
-  isAttacker: boolean;
 }
 
 const BoardCard = (props: IBoardCard, ref: any) => {
   const {
+    effect = EffectType.None,
+    isTarget = false,
+    canSelected = false,
+    canAttack = false,
+
     boardCard,
     onSelect,
     op = false,
     thisTurn = false,
-    isDefender = false,
-    isAttacker = false,
-    selectors = [],
   } = props;
 
   const cardEffect = useMemo(() => {
-    const hasSelected = selectors.length > 0;
-    const selected = selectors.includes(boardCard.revealIndex);
-    const scale = hasSelected ? (selected ? 1.05 : 1) : 1.05;
-    const opacity = hasSelected ? (selected ? 1 : 0.6) : 1;
-    const filter = hasSelected ? (selected ? 'drop-shadow(0px 2px 6px #E82424)' : 'drop-shadow(1px 3px 3px #000000)') : 'drop-shadow(1px 3px 3px #000000)';
-    // 對方卡牌 -- 被標示為可被技能施放者/可被攻擊者
-    if (op && isDefender) {
-      return {
-        cursor: 'pointer',
-        initial: { scale: 1.05, opacity: 0  },
-        animate: { scale, opacity },
-        exit: { scale: 0.8, opacity: 0 },
-        filter: filter,
-      }
-    }
-    // 對方卡牌 -- 被標示為攻擊者
-    if (op && isAttacker) {
-      return {
-        cursor: 'none',
-        initial: { scale: 1.05, opacity: 0  },
-        animate: { scale, opacity },
-        exit: { scale: 0.8, opacity: 0 },
-        filter: filter,
-      }
-    }
-    // 我方卡牌 -- 被標示為可被技能施放者/可被攻擊者
-    if (isDefender) {
-      return {
-        cursor: 'pointer',
-        initial: { scale: 1.05, opacity: 0  },
-        animate: { scale, opacity },
-        exit: { scale: 0.8, opacity: 0 },
-        filter: filter,
-      }
-    }
-    // 我方卡牌 -- 被標示為攻擊者
-    if (isAttacker) {
-      return {
-        cursor: 'pointer',
-        initial: { scale: 1.05, opacity: 0  },
-        animate: { scale, opacity },
-        exit: { scale: 0.8, opacity: 0 },
-        filter: hasSelected && selected ? 'drop-shadow(0px 2px 6px #2FD436)' : 'drop-shadow(1px 3px 3px #000000)',
-      }
+    // const filter = hasSelected ? (selected ? 'drop-shadow(0px 2px 6px #E82424)' : 'drop-shadow(1px 3px 3px #000000)') : 'drop-shadow(1px 3px 3px #000000)';
+    const initial = { scale: 1.05, opacity: 0 };
+    const filter = canSelected || isTarget ? getEffectShadowColor(effect) : getEffectShadowColor(EffectType.None);
+    const exit = { scale: 0.8, opacity: 0 };
+    let className = canAttack || canSelected ? 'pointer' : '';
+    let scale = isTarget || canSelected ? 1.05 : 1;
+    let opacity = !canAttack ? 0.8 : 1;
+    // op's card -- 被標示為可被技能施放者/可被攻擊者
+    if (op) {
+      className = canSelected ? 'pointer' : '';
+      opacity = effect === EffectType.None && !isTarget ? 0.6 : 1;
     }
     return {
-      cursor: 'none',
-      initial: { scale: 1.05, opacity: 0  },
-      animate: { scale: 1.05, opacity },
-      exit: { scale: 0.8, opacity: 0 },
-      filter: 'drop-shadow(1px 3px 3px #000000)',
+      initial,
+      animate: { scale, opacity },
+      exit,
+      filter,
+      className,
     }
-  }, [op, selectors, isAttacker, isDefender])
+  }, [op, isTarget, canSelected, effect, canAttack])
 
   return (
     <ChakraBox
       ref={ref}
       layout
-      pointerEvents={cardEffect.cursor === 'none' ? 'none' : 'auto'}
+      pointerEvents={cardEffect.className ? 'auto' : 'none'}
       pos={'relative'}
       transition={{ type: "spring" }}
       data-id={boardCard.attrs.id}

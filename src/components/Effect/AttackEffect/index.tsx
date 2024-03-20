@@ -6,12 +6,13 @@ import AttackSprite from './AttackSprite';
 interface IAttackEffect {
   top: number;
   left: number;
+  onEnd: () => void;
 }
 
-const AttackEffect: React.FC<IAttackEffect> = ({ top, left }) => {
+const AttackEffect: React.FC<IAttackEffect> = ({ top, left, onEnd }) => {
   return (
     <Center pos={'fixed'} top={top} left={left} zIndex={20}>
-      <AttackSprite />
+      <AttackSprite onEnd={onEnd} />
     </Center>
   )
 };

@@ -16,7 +16,7 @@ type SelectedHandCard = {
 }
 
 const MyHandCards: React.FC = () => {
-  const { myCardStore, battleStore, gameStore } = store;
+  const { myCardStore, gameStore, executeStore } = store;
   const [scope, animate] = useAnimate();
   const [handCard, setHandCard] = useImmer<SelectedHandCard>({ selectedId: -1, selectedIndex: -1, locked: false });
 
@@ -34,7 +34,7 @@ const MyHandCards: React.FC = () => {
       const success = myCardStore.preApplyCard(card.cardId);
       if (success) {
         myCardStore.addCardsToBoard([{ ...card, turn: store.gameStore.turns }]);
-        battleStore.setCaster(card, 'my');
+        executeStore.setMyPlayCardEvent({ cardId: `${card.cardId}`, revealIndex: `${card.revealIndex}` });
         setHandCard(state => {
           state.locked = false;
           state.selectedId = -1;
@@ -79,7 +79,7 @@ const MyHandCards: React.FC = () => {
       zIndex={20}
       position={isExpand ? 'absolute' : 'relative'}
       transform={isExpand ? 'scale(1.2)' : 'scale(0.85)'}
-      pointerEvents={!gameStore.isMyTurn() || handCard.locked ? 'none' : 'auto'}
+      pointerEvents={!gameStore.isMyTurn() || handCard.locked || executeStore.executer?.executing ? 'none' : 'auto'}
     >
       <AnimatePresence mode='popLayout'>
         {myCardStore.handCards.map((card, idx) => (

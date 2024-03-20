@@ -22,7 +22,6 @@ const Lobby: React.FC = () => {
   const { roomStore } = store;
   const { isConnected, address, chainId } = useAccount();
   const [lobbyState, setLobbyState] = useImmer({ init: false });
-  // useGameInit();
   const { connect } = useConnect();
 
   const handleLobbyInit = () => {

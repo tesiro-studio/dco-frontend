@@ -2,10 +2,9 @@ import { toJS } from "mobx";
 import { useEffect } from "react";
 import { store } from "@/stores/RootStore";
 import { ActionKind } from "@/types";
-import delay from "delay";
 
 const useExecuteMyActions = () => {
-  const { boardStore, battleStore } = store;
+  const { boardStore } = store;
 
   const handleAction = async () => {
     const [action] = toJS(boardStore.myActions);
@@ -15,12 +14,10 @@ const useExecuteMyActions = () => {
           boardStore.executedMyAction();
           return await boardStore.endTurn();
         }
-        case ActionKind.HeroSkill: {
-          battleStore.setBuff('my');
-          await delay(2000);
-          boardStore.executedMyAction();
-          break;
-        }
+        // case ActionKind.HeroSkill: {
+        //   executeStore.setHeroSkillEvent(true, () => boardStore.executedMyAction());
+        //   break;
+        // }
         default: {
           boardStore.executedMyAction();
           break;

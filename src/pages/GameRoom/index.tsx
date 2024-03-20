@@ -11,44 +11,38 @@ import OpBoard from './OpBoard';
 import MyBoard from './MyBoard';
 import useRecoverGame from '@/hooks/useRecoverGame';
 import useWatchOpTurnEnd from '@/hooks/useWatchOpTurnEnd';
-import useHandleHitEffect from '@/hooks/useHandleHitEffect';
 import YourTurn from '@/containers/YourTurn';
 import GameOverModal from '@/containers/GameOverModal';
 import ChakraBox, { ChakraImg } from '@/components/ChakraBox';
 import useExecuteMyActions from '@/hooks/useExecuteMyActions';
-import SelectTargetLayer from './SelectTargetLayer';
-import SkillEffect from '@/components/Effect/SkillEffect';
-import AttackEffect from '@/components/Effect/AttackEffect';
-import useHandleSkillEffect from '@/hooks/useHandleSkillEffect';
+import SummonLayer from './SummonLayer';
+import EffectLayer from './EffectLayer';
 
 const GameRoom: React.FC = () => {
   const [scope, animate] = useAnimate();
-  const { roomStore, battleStore } = store;
+  const { roomStore, executeStore } = store;
   const [boardLaunched, setBoardLaunched] = useState(false);
   const { actionInit, cardsInit } = useRecoverGame(Number(roomStore.roomInfo?.turns));
+  const isGameInited = useMemo(() => actionInit && cardsInit, [actionInit, cardsInit]);
   useWatchOpTurnEnd();
   useExecuteMyActions();
-  const hitAttacked = useHandleHitEffect(battleStore.attacker, animate);
-  const skillAttacked = useHandleSkillEffect(battleStore.caster, animate);
-  const isGameInited = useMemo(() => actionInit && cardsInit, [actionInit, cardsInit]);
 
   return (
     <Center w={'100vw'} ref={scope} h={'100vh'} bgImage={FloorImg} bgRepeat={'no-repeat'} bgSize={'cover'}>
       <Center h={'90%'} pos={'relative'}>
-        {battleStore.caster?.from === 'my' && (
-          <SelectTargetLayer
-            left={battleStore.caster.left}
-            top={battleStore.caster.top}
-            cardId={battleStore.caster.card.cardId}
-          />
-        )}
+        <EffectLayer animate={animate} />
+        <SummonLayer />
         {boardLaunched && (
           <Fragment>
-            {hitAttacked.show && <AttackEffect top={hitAttacked.top} left={hitAttacked.left} />}
-            {skillAttacked.show && <SkillEffect top={skillAttacked.top} left={skillAttacked.left} />}
             <YourTurn key={'turn'} />
             <GameOverModal key={'over'} />
-            <Box pos={'absolute'} zIndex={11} right={'6.5%'} top={'calc(50% - 4rem)'}>
+            <Box
+              pos={'absolute'}
+              zIndex={11}
+              right={'6.5%'}
+              top={'calc(50% - 4rem)'}
+              pointerEvents={executeStore.executer?.executing ? 'none' : 'auto'}
+            >
               <SwitchTurnButton />
             </Box>
           </Fragment>

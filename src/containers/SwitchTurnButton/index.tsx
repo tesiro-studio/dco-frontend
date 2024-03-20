@@ -4,9 +4,9 @@ import { observer } from 'mobx-react-lite';
 import React from 'react'
 
 const SwitchTurnButton: React.FC = () => {
-  const { gameStore, boardStore, battleStore } = store;
+  const { gameStore, boardStore, executeStore } = store;
   const handleEndTurn = () => {
-    battleStore.done()
+    executeStore.done()
     boardStore.addMyEndTurnAction();
   }
 

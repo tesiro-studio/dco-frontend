@@ -27,7 +27,7 @@ const SkillSprite: React.FC<ISkillSprite> = ({ onEnd }) => {
       bgSize={'auto'}
       bgPos={'192px 0px'}
       onAnimationEnd={() => onEnd?.()}
-      transform={'translateX(-30px)'}
+      transform={'translate(-96px, -86px) scale(2)'}
     />
   )
 };

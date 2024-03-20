@@ -34,6 +34,7 @@ export const getGameConfig = (roomInfo: ViewReturnType<'roomInfo'>[0], address: 
 
 export const getCardRealPosition = (revealIndex: number) => {
   const cardSelector = `[data-index="${revealIndex}"]`;
+  console.log(cardSelector);
   const { left, top, width } = document.querySelector(cardSelector)?.getBoundingClientRect() as DOMRect ?? {};
   return { left, top, width };
 }

@@ -9,18 +9,18 @@ import OpHandCards from './OpHandCards';
 import OpAvatar from './OpAvatar';
 import OpBoardCards from './OpBoardCards';
 import { store } from '@/stores/RootStore';
-import { ActionKind } from '@/types';
+import { ActionKind, CardKind, EffectType } from '@/types';
 import { parseRawAction } from '@/utils/action';
 import OpMana from './OpMana';
-import { Action } from '@/model/Game';
 
 const OpBoard: React.FC = () => {
-  const { opCardStore, boardStore, gameStore, battleStore, myCardStore } = store;
+  const { opCardStore, boardStore, gameStore, myCardStore, executeStore } = store;
   const [handCardScope, handCardAnimate] = useAnimate();
 
-  const addCardToBoard = async (revealIndex: number, action: Action) => {
+  const addCardToBoard = async (revealIndex: number, cardId: CardKind, target: number = 0) => {
     // 執行對方出牌效果
-    const { target, card } = action;
+    opCardStore.playCardFromHand(cardId, revealIndex);
+  
     const { innerHeight, innerWidth } = window;
     const cardSelector = `[data-index="${revealIndex}"]`;
     const cardFilpSelector = `[data-index="${revealIndex}"] > .card`;
@@ -37,16 +37,28 @@ const OpBoard: React.FC = () => {
       { rotateY: ['180deg', '0deg'], },
       { duration: 0.5, delay: 0.5 },
     )
-    battleStore.setCaster({ cardId: Number(card), revealIndex }, 'op');
-    battleStore.confirmTarget(`${target}`);
-    await delay(1000);
-    await handCardAnimate(
-      cardSelector,
-      { opacity: [1, 0, 0, 0], x: [posX, posX - 20, posX - 20, posX - 20], zIndex: -1 },
-      { duration: 1, delay: 0.5 },
+    const effect = executeStore.setOpPlayCardEvent(
+      {
+        revealIndex: `${revealIndex}`,
+        cardId: `${cardId}`,
+      },
+      target,
+      async () => {
+        await delay(1000);
+        await handCardAnimate(
+          cardSelector,
+          { opacity: [1, 0, 0, 0], x: [posX, posX - 20, posX - 20, posX - 20], zIndex: -1 },
+          { duration: 1, delay: 0.5 },
+        )
+        await delay(1000);
+        opCardStore.addCardsToBoard([{ cardId, revealIndex, turn: gameStore.turns }]);
+        await boardStore.completeOpAction();
+      }
     )
-    await delay(1000);
-    battleStore.done();
+    if (effect === EffectType.None) {
+      // no animation.
+      executeStore.done();
+    }
   }
 
   const handleAction = async () => {
@@ -58,13 +70,7 @@ const OpBoard: React.FC = () => {
         case ActionKind.PlayCard: {
           // 對方出牌步驟： 盤面載入動作, 將手牌對應位置卡牌添上cardId預備做翻牌效果, 從手牌拉出並翻牌, 將卡牌加入盤面並刷新裝態
           await gameStore.applyAction(applyAction);
-          console.log('applyAction:', applyAction);
-          // battleStore.setCaster({ cardId: Number(id), revealIndex }, 'op');
-          // battleStore.confirmTarget(`${applyAction.target}`);
-          opCardStore.playCardFromHand(action.cardId, action.nthDrawn);
-          await addCardToBoard(action.nthDrawn, applyAction);
-          opCardStore.addCardsToBoard([{ cardId: action.cardId, revealIndex: action.nthDrawn, turn: gameStore.turns }]);
-          await boardStore.completeOpAction();
+          await addCardToBoard(action.nthDrawn, action.cardId, applyAction.target);
           break;
         }
         case ActionKind.EndTurn: {
@@ -77,21 +83,26 @@ const OpBoard: React.FC = () => {
           break;
         }
         case ActionKind.MinionAttack: {
-          // 對方攻擊步驟：盤面載入, 高亮雙方卡牌, 由useHandleCardBattle進行畫面操作並刷新
+          // 對方攻擊步驟：盤面載入, 高亮雙方卡牌
           const { revealIndex, attrs: { id } } = opCardStore.boardCards[applyAction.position ?? -1];
           // const { revealIndex: target = -1 } = myCardStore.boardCards[applyAction.target ?? -1] || {};
           await gameStore.applyAction(applyAction);
-          battleStore.setAttacker({ cardId: Number(id), revealIndex }, 'op');
-          battleStore.confirmTarget(`${applyAction.target}`);
-          console.log('applyAction.target:', applyAction.target);
-          // boardStore.completeOpAction(); 移到useHandleCardBattle處理
+          executeStore.setOpAttackEvent(
+            { cardId: `${id}`, revealIndex: `${revealIndex}` },
+            applyAction.target ?? 0,
+            async () => {
+              await delay(1000);
+              await boardStore.completeOpAction();
+            }
+          )
           break;
         }
         case ActionKind.HeroSkill: {
-          battleStore.setBuff('op');
-          await delay(1500);
-          await gameStore.applyAction(applyAction);
-          await boardStore.completeOpAction();
+          executeStore.setHeroSkillEvent(false, async () => {
+            await gameStore.applyAction(applyAction);
+            await delay(1500);
+            await boardStore.completeOpAction();
+          })
           break;
         }
         default: {

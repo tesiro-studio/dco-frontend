@@ -3,122 +3,43 @@ import { observer } from 'mobx-react-lite';
 import React, { useMemo } from 'react'
 import BoardCard from '@/components/BaseCard/BoardCard';
 import { store } from '@/stores/RootStore';
-import { BoardCardType } from '@/types';
+import { BoardCardType, CardEventType } from '@/types';
 
 const MyBoardCards: React.FC = () => {
-  const { myCardStore, battleStore, boardStore, gameStore } = store;
-
-  const selectionInfo = useMemo(() => {
-    const info = {
-      isDefender: false,
-      isAttacker: gameStore.isMyTurn(),
-      selectors: [] as number[],
-    };
-    if (!battleStore.availableTargets?.defaultValue) {
-      if (battleStore.caster) {
-        const { target } = battleStore.caster;
-        const hasTarget = Boolean(target);
-        const targetIsHero = hasTarget && [battleStore.availableTargets?.opHeroCanSelected, battleStore.availableTargets?.myHeroCanSelected].includes(target);
-        if (gameStore.isMyTurn()) {
-          info.isDefender = (battleStore.availableTargets?.myTargets.length ?? 0) > 0;
-          info.selectors = hasTarget ? battleStore.availableTargets?.myTargets.filter((mt) => `${mt.target}` === target).map((mt) => mt.revealIndex) ?? [] : battleStore.availableTargets?.myTargets.map((mt) => mt.revealIndex) ?? [];
-        } else {
-          info.isDefender = (battleStore.availableTargets?.opTargets.length ?? 0) > 0;
-          info.selectors = hasTarget ? battleStore.availableTargets?.opTargets.filter((mt) => `${mt.target}` === target).map((mt) => mt.revealIndex) ?? [] : battleStore.availableTargets?.opTargets.map((mt) => mt.revealIndex) ?? [];
-        }
-        if (targetIsHero) {
-          info.selectors = [-1];
-        }
-        info.isAttacker = false;
-      }
-      if (battleStore.attacker) {
-        info.isAttacker = battleStore.attacker.from === 'my';
-        info.isDefender = battleStore.attacker.from === 'op';
-        if (info.isAttacker) {
-          info.selectors = [battleStore.attacker.card.revealIndex];
-        } else {
-          const { target } = battleStore.attacker;
-          if (target) {
-            info.selectors = battleStore.availableTargets?.myTargets.filter((mt) => `${mt.target}` === target).map((mt) => mt.revealIndex) ?? [];
-          } else {
-            info.selectors = battleStore.availableTargets?.myTargets.map((mt) => mt.revealIndex) ?? [];
-          }
-        }
-      }
-    }
-    return info;
-  }, [gameStore.turns, battleStore.availableTargets, battleStore.attacker?.target, battleStore.caster?.target]);
-
-  // const defenderCanSelect = useMemo(() => {
-  //   if (battleStore.caster && battleStore.availableTargets) {
-  //     const { target } = battleStore.caster;
-  //     const hasTarget = Boolean(target);
-  //     const targets = battleStore.availableTargets.myTargets.filter(ot => `${ot.target}` === target);
-  //     if (hasTarget) {
-  //       return targets.length ? targets.map(({ revealIndex }) => revealIndex) : [];
-  //     }
-  //     return battleStore.availableTargets.myTargets.map(({ revealIndex }) => revealIndex);
-  //   }
-  //   return [];
-  // }, [battleStore.availableTargets, battleStore.caster?.target]);
-
-  // const attackerCanSelect = useMemo(() => {
-  //   if (battleStore.caster) {
-  //     return [];
-  //   }
-  //   if (battleStore.attacker && battleStore.availableTargets) {
-  //     const { card } = battleStore.attacker;
-  //     return [card.revealIndex];
-  //   }
-  //   return gameStore.isMyTurn() ? myCardStore.boardCards.filter(bc => Boolean(bc.attrs.canAttack)).map(({ revealIndex }) => revealIndex) : [];
-  // }, [myCardStore.boardCards, battleStore.availableTargets]);
+  const { myCardStore, boardStore, gameStore, executeStore } = store;
 
   const handleSelect = async (card: BoardCardType) => {
-    if (selectionInfo.isAttacker) {
-      battleStore.setAttacker({ cardId: Number(card.attrs.id), revealIndex: card.revealIndex }, 'my');
+    const eventExecuter = { revealIndex: `${card.revealIndex}`, cardId: `${card.attrs.id.toString()}` };
+    if (executeStore.availableTargets) {
+      if (executeStore.availableTargets.targets.findIndex(target => target.revealIndex === +eventExecuter.revealIndex) >= 0) {
+        if (executeStore.executer?.event === CardEventType.Summon) executeStore.setMyPlayCardTarget(eventExecuter);
+        if (executeStore.executer?.event === CardEventType.HeroAttack) {};
+      } else {
+        executeStore.setMyAttackEvent(eventExecuter);
+      }
+    } else if (Boolean(card.attrs.canAttack) && executeStore.executer?.from?.revealIndex !== eventExecuter.revealIndex) {
+      executeStore.setMyAttackEvent(eventExecuter);
     }
-    if (battleStore.caster) {
-      const { target = 0 } = battleStore.availableTargets?.myTargets.find(mt => mt.revealIndex === card.revealIndex) ?? {};
-      battleStore.confirmTarget(`${target}`);
-      // await delay(500);
-      // await battleStore.casterEffectReady();
-      // battleStore.done();
-    }
-    // }
   }
 
-  // const isDefender = useMemo(() => {
-  //   if (battleStore.availableTargets) {
-  //     return battleStore.availableTargets.myTargets.map(({ revealIndex }) => revealIndex);
-  //   }
-  //   return [];
-  // }, [battleStore.availableTargets]);
+  const executeEffect = useMemo(() => {
+    return executeStore.executer?.effect;
+  }, [executeStore.executer]);
 
-  // const isAttacker = useMemo(() => {
-  //   if (battleStore.caster) {
-  //     return [];
-  //   }
-  //   return myCardStore.boardCards.filter(({ attrs }) => Boolean(attrs.canAttack)).map(({ revealIndex }) => revealIndex);
-  // }, [battleStore.caster, myCardStore.boardCards]);
+  const selectors = useMemo(() => {
+    return executeStore.availableTargets?.targets.map(({ revealIndex }) => +revealIndex);
+  }, [executeStore.availableTargets]);
 
-  // const selectors = useMemo(() => {
-  //   // 如果是技能施放 則選caster target
-  //   if (battleStore.caster && battleStore.availableTargets) {
-  //     const { target } = battleStore.caster;
-  //     const { revealIndex } = battleStore.availableTargets.myTargets.find(ot => `${ot.target}` === target) ?? {};
-  //     return revealIndex ? [revealIndex] : [];
-  //   }
-  //   if (battleStore.attacker && battleStore.availableTargets) {
-  //     const isMyTurn = gameStore.isMyTurn();
-  //     if (isMyTurn) {
-  //       const { card } = battleStore.attacker;
-  //       return [card.revealIndex];
-  //     }
-  //     const { card } = battleStore.attacker;
-  //     return [card.revealIndex];
-  //   }
-  //   return [];
-  // }, [battleStore.caster?.target, battleStore.attacker?.target]);
+  const isTarget = useMemo(() => {
+    if (executeStore.executer) {
+      const { from, to } = executeStore.executer;
+      const indexs = [];
+      from?.revealIndex && indexs.push(+from.revealIndex);
+      to?.revealIndex && indexs.push(+to.revealIndex);
+      return indexs;
+    }
+    return [];
+  }, [executeStore.executer?.from, executeStore.executer?.to])
 
   return (
     <AnimatePresence>
@@ -127,11 +48,13 @@ const MyBoardCards: React.FC = () => {
           key={`${card.attrs.id}_${card.revealIndex}`}
           boardCard={card}
           op={!boardStore.isMyTurn}
-          isDefender={selectionInfo.isDefender}
-          isAttacker={selectionInfo.isAttacker && Boolean(card.attrs.canAttack)}
+          canSelected={selectors?.includes(card.revealIndex)}
+          canAttack={Boolean(card.attrs.canAttack)}
+          isTarget={isTarget.includes(card.revealIndex)}
+          effect={executeEffect}
           onSelect={() => handleSelect(card)}
           thisTurn={card.turn === gameStore.turns}
-          selectors={selectionInfo.selectors}
+          // selectors={selectionInfo.selectors}
         />
       ))}
     </AnimatePresence>

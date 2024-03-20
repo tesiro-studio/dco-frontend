@@ -38,6 +38,7 @@ const useWatchOpTurnEnd = () => {
         addTurnActions(roomId, BigInt(store.gameStore.turns), true);
       }
     });
+    // window.add = () => addTurnActions(24n, 6n);
     return () => {
       unwatchTurn();
       unwatchGameOver();

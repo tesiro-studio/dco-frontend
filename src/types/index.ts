@@ -128,3 +128,19 @@ export type BoardCardType = {
 }
 
 export type BattleAction = { initiator: string, targets: number[] };
+
+export const enum CardEventType {
+  Summon,
+  Attack,
+  HeroSkill,
+  HeroAttack,
+};
+
+export const enum EffectType {
+  None,
+  Attack,
+  SkillAttack,
+  Buff,
+  Debuff,
+  Heal,
+};

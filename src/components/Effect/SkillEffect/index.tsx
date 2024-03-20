@@ -6,12 +6,13 @@ import SkillSprite from './SkillSprite';
 interface ISkillEffect {
   top: number;
   left: number;
+  onEnd: () => void;
 }
 
-const SkillEffect: React.FC<ISkillEffect> = ({ top, left }) => {
+const SkillEffect: React.FC<ISkillEffect> = ({ top, left, onEnd }) => {
   return (
     <Center pos={'fixed'} top={top} left={left} zIndex={20}>
-      <SkillSprite />
+      <SkillSprite onEnd={onEnd} />
     </Center>
   )
 };

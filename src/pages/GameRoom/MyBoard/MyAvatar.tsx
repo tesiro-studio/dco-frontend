@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite';
 
 import { store } from '@/stores/RootStore';
 import Value from '@/components/Value';
-import { HeroKind } from '@/types';
+import { CardEventType, EffectType, HeroKind } from '@/types';
 import ChakraBox from '@/components/ChakraBox';
 import HeroSkill from '@/components/HeroSkill';
 import HeroShield from '@/components/HeroStats/HeroShield';
@@ -13,7 +13,7 @@ import LivesImg from '@/assets/icons/lives.png';
 import Rogue from '@/assets/servants/9.png';
 import Warrior from '@/assets/servants/4.png';
 import HeroWeapon from '@/components/HeroStats/HeroWeapon';
-import HeroExecute from '@/components/HeroStats/HeroExecute';
+import { getEffectShadowColor } from '@/utils/action';
 
 const Avatars = {
   [HeroKind.Rogue]: Rogue,
@@ -22,44 +22,16 @@ const Avatars = {
 };
 
 const MyAvatar: React.FC = () => {
-  const { boardStore, battleStore, gameStore } = store;
+  const { boardStore, gameStore, executeStore } = store;
   const [executing, setExecuting] = useState(false);
 
-  const myAvatarCanSelected = useMemo(() => {
-    // const isMyTurn = gameStore.isMyTurn();
-    if (battleStore.caster) {
-      const { defaultValue, opHeroCanSelected, myHeroCanSelected } = battleStore.availableTargets ?? {};
-      if (defaultValue) {
-        return gameStore.isMyTurn() ? defaultValue === myHeroCanSelected : defaultValue === opHeroCanSelected;
-      }
-      const hasTarget = Boolean(battleStore.caster?.target);
-      let targetIsMyHero = false;
-      if (gameStore.isMyTurn()) {
-        targetIsMyHero = hasTarget && battleStore.caster?.target === myHeroCanSelected;
-      } else {
-        targetIsMyHero = hasTarget && battleStore.caster?.target === opHeroCanSelected;
-      }
-      return hasTarget ? targetIsMyHero : Boolean(myHeroCanSelected);
-    }
-    if (battleStore.attacker) {
-      const hasTarget = Boolean(battleStore.attacker?.target);
-      let targetIsMyHero = false;
-      if (gameStore.isMyTurn()) {
-        return false; // dont hit yourself
-      } else {
-        targetIsMyHero = hasTarget && battleStore.attacker?.target === battleStore.availableTargets?.myHeroCanSelected;
-      }
-      return hasTarget ? targetIsMyHero : true;
-    }
-    return false;
-  }, [battleStore.availableTargets, battleStore.caster?.target, gameStore.turns]);
-
   const handleClickAvatar = async () => {
-    if (battleStore.availableTargets) {
-      battleStore.confirmTarget(battleStore.availableTargets.myHeroCanSelected);
-      // await delay(500);
-      // await battleStore.casterEffectReady();
-      // battleStore.done()
+    if (myHeroSelectable.canSelect) {
+      if (executeStore.executer?.event === CardEventType.Summon) {
+        executeStore.setMyPlayCardTarget({
+          isMyHero: true,
+        })
+      }
     }
   }
 
@@ -68,7 +40,7 @@ const MyAvatar: React.FC = () => {
   const handleHeroSkill = async () => {
     try {
       setExecuting(true);
-      await boardStore.addHeroSkillAction()
+      executeStore.setHeroSkillEvent(true, () => boardStore.addHeroSkillAction());
     } catch (error) {
       console.log(error);
       setExecuting(false);
@@ -77,13 +49,24 @@ const MyAvatar: React.FC = () => {
 
   const canUseSkill = useMemo(() => {
     if (!gameStore.isMyTurn() || executing) return false;
-    return Boolean(boardStore.myhero.useSkill) && boardStore.myhero.currentMana >= BigInt(2);
-  }, [boardStore.myhero.currentMana, gameStore.turns, executing]);
+    return Boolean(boardStore.myhero.useSkill) && boardStore.myhero.currentMana >= BigInt(2) && Boolean(!executeStore.availableTargets);
+  }, [boardStore.myhero.currentMana, gameStore.turns, executing, executeStore.availableTargets]);
+
+  const myHeroSelectable = useMemo(() => {
+    const { from, to } = executeStore.executer ?? {}
+    const selected = Boolean(executeStore.availableTargets?.myHeroCanSelected) || from?.isMyHero || to?.isMyHero;
+    return {
+      canSelect: Boolean(executeStore.availableTargets?.myHeroCanSelected),
+      selected: from?.isMyHero || to?.isMyHero,
+      effect: selected ? executeStore.executer?.effect ?? EffectType.None : EffectType.None,
+    }
+  }, [executeStore.executer?.from, executeStore.executer?.to]);
 
   useEffect(() => {
     setExecuting(false);
   }, [gameStore.turns]);
 
+  console.log('-----', myHeroSelectable)
   return (
     <Center pos={'relative'}>
       <ChakraBox
@@ -97,17 +80,14 @@ const MyAvatar: React.FC = () => {
       >
         <HeroSkill heroKind={heroKind} />
       </ChakraBox>
-      {battleStore.buff === 'my' && (
-        <HeroExecute onAnimationEnd={() => battleStore.done()} />
-      )}
       <Center
         zIndex={5}
         className="pointer"
         pos={'relative'}
         data-hero="my"
-        transform={myAvatarCanSelected ? 'scale(1.05)' : 'scale(1)'}
-        filter={myAvatarCanSelected ? 'drop-shadow(0px 2px 10px #E82424)' : 'drop-shadow(2px 4px 10px #000000)'}
-        pointerEvents={myAvatarCanSelected ? 'auto' : 'none'}
+        transform={myHeroSelectable.canSelect ? 'scale(1.05)' : 'scale(1)'}
+        filter={getEffectShadowColor(myHeroSelectable.effect)}
+        pointerEvents={myHeroSelectable.canSelect ? 'auto' : 'none'}
         onClick={handleClickAvatar}
       >
         {Boolean(boardStore.myhero.shield) && <HeroShield shield={Number(boardStore.myhero.shield)} />}
