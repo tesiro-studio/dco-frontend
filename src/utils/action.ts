@@ -36,7 +36,7 @@ export const parseRawAction = (rawAction: UploadAction): Action => {
       return {
         kind: ActionKind.HeroAttack,
         card: 0,
-        target: rawAction.params,
+        target: Number(rawAction.params),
         position: 0,
       };
     }
@@ -300,6 +300,7 @@ export const findAvailableSkillTarget = (cardId: CardKind, info: { opCards?: Boa
       if (result.targets.length) {
         return result;
       }
+      result.effect = EffectType.None;
       result.defaultValue = '14';
       return result;
     }
@@ -330,6 +331,7 @@ export const findAvailableSkillTarget = (cardId: CardKind, info: { opCards?: Boa
       result.effect = EffectType.Buff;
       result.targets = findAllOps(op).concat(findAllOps(my, 7));
       if (!result.targets.length) {
+        result.effect = EffectType.None;
         result.defaultValue = '14';
       }
       return result;

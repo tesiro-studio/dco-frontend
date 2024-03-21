@@ -925,8 +925,6 @@ export class Game {
       if (!targetTaunt && tauntCount !== 0) {
         throw new Error("TauntExists");
       }
-
-      console.log('opppp', this.board.opponentBoard[action.target]);
       this.board.myHero.damage(this.board.opponentBoard[action.target].attack);
       this.board.opponentBoard[action.target].damage(atk);
     }

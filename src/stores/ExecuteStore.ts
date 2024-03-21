@@ -88,6 +88,7 @@ export class ExecuteStore {
         opCards: toJS(opCardStore.boardCards),
         myCards: toJS(myCardStore.boardCards),
       });
+      excuter.effect = effect;
       if (defaultValue) {
         const { revealIndex: toRevealIndex = '' } =  targets.find(target => target.target === +defaultValue) || {};
         excuter.to = {
@@ -99,15 +100,14 @@ export class ExecuteStore {
         }
         excuter.callback = () => boardStore.addMyPlayCardAction(
           { cardId: +(cardId), revealIndex: +(revealIndex) },
-          +defaultValue,
+          +(defaultValue),
         );
       } else {
         excuter.executing = false;
       }
-      excuter.effect = effect;
     } else {
       excuter.to = {
-        value: 0,
+        value: -1,
         revealIndex: '',
         cardId: '',
         isMyHero: false,

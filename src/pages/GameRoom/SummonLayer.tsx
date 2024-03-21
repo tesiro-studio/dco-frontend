@@ -46,11 +46,13 @@ const SummonLayer: React.FC = () => {
     // 不需要選擇對象則立刻執行出牌動作
     if (!selectTargetPopup && executeStore.executer?.from && executeStore.executer.effect === EffectType.None) {
       const { cardId, revealIndex } = executeStore.executer.from;
-      await delay(2000);
-      await boardStore.addMyPlayCardAction(
-        { cardId: +(cardId), revealIndex: +(revealIndex) },
-        executeStore.executer?.to?.value
-      );
+      await delay(1000);
+      if (+(executeStore.executer?.to?.value ?? -1) < 0) {
+        await boardStore.addMyPlayCardAction(
+          { cardId: +(cardId), revealIndex: +(revealIndex) },
+          0
+        );
+      }
       await executeStore.done();
     }
   }
