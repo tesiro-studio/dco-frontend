@@ -20,6 +20,7 @@ const SelectClass: React.FC = () => {
     if (address) {
       setJoin(true);
       try {
+        Notification.permission !== 'granted' && Notification.requestPermission();
         await tcg.joinGame(address, roomStore.myHeroSelected, opBNBTestnet.id);
         await roomStore.check();
       } catch (error) {

@@ -14,11 +14,6 @@ const AppButton: React.FC<IAppButton> = ({ children, ...props }) => {
       fontSize={'1.25rem'}
       lineHeight={1.2}
       color={'button.1'}
-      _disabled={{
-        '.label': {
-          opacity: 0.5
-        }
-      }}
       w={'10rem'}
       h={'3.75rem'}
       {...props}

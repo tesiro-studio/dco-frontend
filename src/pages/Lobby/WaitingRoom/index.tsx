@@ -9,11 +9,14 @@ import { GameState } from '@/types';
 import tcg from '@/services/tcg';
 import { getGameConfig } from '@/utils/game';
 import { useNavigate } from 'react-router-dom';
+import { usePageVisibility } from 'react-page-visibility';
+import { show } from '@/utils/notification';
 
 const WaitingRoom: React.FC = () => {
   const { roomStore } = store;
   const unwatch = useRef<() => void>();
   const navigate = useNavigate();
+  const isVisible = usePageVisibility();
 
   const handleWatchGame = async () => {
     const { roomInfo } = roomStore;
@@ -31,6 +34,7 @@ const WaitingRoom: React.FC = () => {
         }
         case GameState.WaitingForShuffling: {
           console.log('@配對成功，等待雙方洗牌');
+          if (!isVisible) show('Getting matched!', 'The game is beginning...');
           let initShuffle = roomInfo.shuffleVerified[gameConfig.myPlayerIndex];
           const initOpShuffle = roomInfo.shuffleVerified[gameConfig.opPlayerIndex];
           const remaskShuffle = roomInfo.shuffleRemasked[gameConfig.myPlayerIndex];
