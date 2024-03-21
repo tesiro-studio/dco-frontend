@@ -31,7 +31,7 @@ const useRecoverGame = (turns: number) => {
         const allMyPlayedCard: PulledCardType[] = []; 
         const allOpPlayedCard: PulledCardType[] = [];
         // 從第一個回合開始初始化狀態
-        for (let idx = 1; idx < state.turns - 1; idx++) {
+        for (let idx = 1; idx < state.turns; idx++) {
           const actions = await tcg.getActions(roomStore.roomId, BigInt(idx));
           for (const rawAction of actions) {
             const action = parseRawAction(rawAction as any);

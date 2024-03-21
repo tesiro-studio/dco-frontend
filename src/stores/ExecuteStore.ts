@@ -116,7 +116,6 @@ export class ExecuteStore {
     }
 
     runInAction(() => {
-      console.log('@@@@', excuter.to);
       this.executer = excuter
     })
   }
@@ -214,7 +213,6 @@ export class ExecuteStore {
       }
     }
     runInAction(() => {
-      console.log('---->', executer);
       this.executer = executer;
     })
     return effect;
@@ -269,13 +267,79 @@ export class ExecuteStore {
         callback,
         executing: true,
       }
-      console.log(toJS(this.executer));
     })
   }
 
-  // setHeroAttackEvent (isMyHero: boolean, target: number) {
+  setMyHeroAttackEvent () {
+    runInAction(() => {
+      this.executer = {
+        from: {
+          revealIndex: '',
+          cardId: '',
+          isMyHero: true,
+          isOpHero: false,
+        },
+        event: CardEventType.HeroAttack,
+        effect: EffectType.Attack,
+        executing: false,
+      }
+    })
+  }
 
-  // }
+  setMyHeroAttackTarget (to: Partial<ExecuterType>) {
+    runInAction(() => {
+      if (this.executer && this.executer.from) {
+        const { boardStore, opCardStore } = this.rootStore;
+        const { isMyHero = false, isOpHero = false, revealIndex = '', cardId = '' } = to;
+        const position = opCardStore.boardCards.findIndex(card => card.revealIndex === +revealIndex);
+        this.executer.to = {
+          value: isOpHero ? 7 : position,
+          isMyHero,
+          isOpHero,
+          revealIndex,
+          cardId,
+        }
+        this.executer.executing = true;
+        this.executer.callback = () => boardStore.addMyHeroAttackAction(
+          this.executer?.to?.value ?? 0,
+        );
+      }
+    })
+  }
+
+  setOpHeroAttackEvent (target: number, callback?: () => Promise<void>) {
+    const { opCardStore, myCardStore } = this.rootStore;
+    const { effect, myHeroCanSelected, targets } = findAvailableAttackTarget(
+      {
+        opCards: toJS(opCardStore.boardCards),
+        myCards: toJS(myCardStore.boardCards),
+      },
+      false
+    );
+    console.log('targets:', targets);
+    console.log('myHeroCanSelected:', myHeroCanSelected);
+    const revealIndex = targets.find(t => t.target === target)?.revealIndex ?? '';
+    runInAction(() => {
+      this.executer = {
+        event: CardEventType.HeroAttack,
+        effect,
+        executing: true,
+        callback,
+        from: {
+          revealIndex: '',
+          cardId: '',
+          isOpHero: true,
+          isMyHero: false,
+        },
+        to: {
+          revealIndex: `${revealIndex}`,
+          cardId: '',
+          isMyHero: myHeroCanSelected === `${target}`,
+          isOpHero: false,
+        },
+      };
+    })
+  }
 
   async done () {
     console.log('- done');

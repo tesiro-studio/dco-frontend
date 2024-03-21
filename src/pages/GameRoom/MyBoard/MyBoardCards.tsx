@@ -10,10 +10,10 @@ const MyBoardCards: React.FC = () => {
 
   const handleSelect = async (card: BoardCardType) => {
     const eventExecuter = { revealIndex: `${card.revealIndex}`, cardId: `${card.attrs.id.toString()}` };
+    if (executeStore.executer?.executing) return;
     if (executeStore.availableTargets) {
       if (executeStore.availableTargets.targets.findIndex(target => target.revealIndex === +eventExecuter.revealIndex) >= 0) {
         if (executeStore.executer?.event === CardEventType.Summon) executeStore.setMyPlayCardTarget(eventExecuter);
-        if (executeStore.executer?.event === CardEventType.HeroAttack) {};
       } else {
         executeStore.setMyAttackEvent(eventExecuter);
       }
@@ -29,6 +29,16 @@ const MyBoardCards: React.FC = () => {
   const selectors = useMemo(() => {
     return executeStore.availableTargets?.targets.map(({ revealIndex }) => +revealIndex);
   }, [executeStore.availableTargets]);
+
+  const isAttacker = useMemo(() => {
+    if (executeStore.executer) {
+      const { from } = executeStore.executer;
+      const indexs = [];
+      from?.revealIndex && indexs.push(+from.revealIndex);
+      return indexs;
+    }
+    return [];
+  }, [executeStore.executer?.from])
 
   const isTarget = useMemo(() => {
     if (executeStore.executer) {
@@ -51,6 +61,8 @@ const MyBoardCards: React.FC = () => {
           canSelected={selectors?.includes(card.revealIndex)}
           canAttack={Boolean(card.attrs.canAttack)}
           isTarget={isTarget.includes(card.revealIndex)}
+          isAttacker={isAttacker.includes(card.revealIndex)}
+          hasConfirmTarget={isTarget.length === 2}
           effect={executeEffect}
           onSelect={() => handleSelect(card)}
           thisTurn={card.turn === gameStore.turns}

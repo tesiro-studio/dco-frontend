@@ -21,7 +21,7 @@ const OpHandCards: React.FC = () => {
       position={'relative'}
       pointerEvents={'none'}
     >
-      <AnimatePresence mode='popLayout'>
+      <AnimatePresence mode='wait'>
         {opCardStore.handCards.map((card, idx) => (
           <HandCard
             key={`${idx}_${card.revealIndex}`}

@@ -66,6 +66,7 @@ const MyHandCards: React.FC = () => {
       state.selectedIndex = -1;
     })
   }, [gameStore.turns]);
+
   return (
     <Flex
       display={'inline-flex'}
@@ -81,7 +82,7 @@ const MyHandCards: React.FC = () => {
       transform={isExpand ? 'scale(1.2)' : 'scale(0.85)'}
       pointerEvents={!gameStore.isMyTurn() || handCard.locked || executeStore.executer?.executing ? 'none' : 'auto'}
     >
-      <AnimatePresence mode='popLayout'>
+      <AnimatePresence mode='wait'>
         {myCardStore.handCards.map((card, idx) => (
           <HandCard
             key={`${card.cardId}_${card.revealIndex}`}

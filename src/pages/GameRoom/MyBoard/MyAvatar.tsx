@@ -32,6 +32,8 @@ const MyAvatar: React.FC = () => {
           isMyHero: true,
         })
       }
+    } else if (canAttack) {
+      executeStore.setMyHeroAttackEvent();
     }
   }
 
@@ -52,6 +54,10 @@ const MyAvatar: React.FC = () => {
     return Boolean(boardStore.myhero.useSkill) && boardStore.myhero.currentMana >= BigInt(2) && Boolean(!executeStore.availableTargets);
   }, [boardStore.myhero.currentMana, gameStore.turns, executing, executeStore.availableTargets]);
 
+  const canAttack = useMemo(() => {
+    return !Boolean(boardStore.myhero.attacked) && Boolean(boardStore.myhero.weaponAttack);
+  }, [boardStore.myhero.attacked, boardStore.myhero.weaponAttack]);
+
   const myHeroSelectable = useMemo(() => {
     const { from, to } = executeStore.executer ?? {}
     const selected = Boolean(executeStore.availableTargets?.myHeroCanSelected) || from?.isMyHero || to?.isMyHero;
@@ -59,6 +65,7 @@ const MyAvatar: React.FC = () => {
       canSelect: Boolean(executeStore.availableTargets?.myHeroCanSelected),
       selected: from?.isMyHero || to?.isMyHero,
       effect: selected ? executeStore.executer?.effect ?? EffectType.None : EffectType.None,
+      isAttacker: from?.isMyHero,
     }
   }, [executeStore.executer?.from, executeStore.executer?.to]);
 
@@ -66,7 +73,6 @@ const MyAvatar: React.FC = () => {
     setExecuting(false);
   }, [gameStore.turns]);
 
-  console.log('-----', myHeroSelectable)
   return (
     <Center pos={'relative'}>
       <ChakraBox
@@ -86,8 +92,8 @@ const MyAvatar: React.FC = () => {
         pos={'relative'}
         data-hero="my"
         transform={myHeroSelectable.canSelect ? 'scale(1.05)' : 'scale(1)'}
-        filter={getEffectShadowColor(myHeroSelectable.effect)}
-        pointerEvents={myHeroSelectable.canSelect ? 'auto' : 'none'}
+        filter={myHeroSelectable.isAttacker ? 'drop-shadow(0px 2px 10px #FFAC0B)' : getEffectShadowColor(myHeroSelectable.effect)}
+        pointerEvents={canAttack || myHeroSelectable.canSelect ? 'auto' : 'none'}
         onClick={handleClickAvatar}
       >
         {Boolean(boardStore.myhero.shield) && <HeroShield shield={Number(boardStore.myhero.shield)} />}

@@ -5,10 +5,12 @@ import { BoardCardType, EffectType } from '@/types';
 import { getEffectShadowColor } from '@/utils/action';
 
 interface IBoardCard {
-  effect?: EffectType,
-  isTarget?: boolean,
-  canSelected?: boolean,
-  canAttack?: boolean,
+  effect?: EffectType;
+  isTarget?: boolean;
+  isAttacker?: boolean;
+  canSelected?: boolean;
+  canAttack?: boolean;
+  hasConfirmTarget?: boolean;
 
   boardCard: BoardCardType;
   op?: boolean;
@@ -20,9 +22,10 @@ const BoardCard = (props: IBoardCard, ref: any) => {
   const {
     effect = EffectType.None,
     isTarget = false,
+    isAttacker = false,
     canSelected = false,
     canAttack = false,
-
+    hasConfirmTarget = false,
     boardCard,
     onSelect,
     op = false,
@@ -32,16 +35,16 @@ const BoardCard = (props: IBoardCard, ref: any) => {
   const cardEffect = useMemo(() => {
     // const filter = hasSelected ? (selected ? 'drop-shadow(0px 2px 6px #E82424)' : 'drop-shadow(1px 3px 3px #000000)') : 'drop-shadow(1px 3px 3px #000000)';
     const initial = { scale: 1.05, opacity: 0 };
-    const filter = canSelected || isTarget ? getEffectShadowColor(effect) : getEffectShadowColor(EffectType.None);
+    let filter = canSelected || isTarget ? getEffectShadowColor(effect) : getEffectShadowColor(EffectType.None);
     const exit = { scale: 0.8, opacity: 0 };
     let className = canAttack || canSelected ? 'pointer' : '';
     let scale = isTarget || canSelected ? 1.05 : 1;
-    let opacity = !canAttack ? 0.8 : 1;
+    let opacity = hasConfirmTarget && !isTarget ? 0.6 : 1;
     // op's card -- 被標示為可被技能施放者/可被攻擊者
     if (op) {
       className = canSelected ? 'pointer' : '';
-      opacity = effect === EffectType.None && !isTarget ? 0.6 : 1;
     }
+    filter = isAttacker ? 'drop-shadow(0px 2px 10px #FFAC0B)' : filter;
     return {
       initial,
       animate: { scale, opacity },

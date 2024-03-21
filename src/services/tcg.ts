@@ -51,7 +51,6 @@ class TCG {
       } else {
         shuffleResult = await zhuffle.shuffle([roomPk2x, roomPk2y]) as any[];
       }
-      console.log('--->', shuffleResult);
       const txHash = await write('verifyShuffle', shuffleResult);
       const receipt = await waitForTransactionReceipt(config, { hash: txHash });
       console.log('verifyShuffle:', receipt);

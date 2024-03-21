@@ -125,6 +125,26 @@ export class BoardStore {
     }
   }
 
+  async addMyHeroAttackAction (target: number) {
+    const { gameStore } = this.rootStore;
+    if (gameStore) {
+      const action = {
+        kind: ActionKind.HeroAttack,
+        cardId: 0,
+        params: target,
+        nthDrawn: 0,
+        stateHash: zeroHash,
+        rtoken: [0, 0]
+      }
+      const applyAction = parseRawAction(action);
+      const { boardHashAfter } = await gameStore.applyAction(applyAction);
+      action.stateHash = boardHashAfter;
+      runInAction(() => {
+        this.myActions.push(action);
+      })
+    }
+  }
+
   async endTurn () {
     const { gameStore, zkey, opCardStore, roomStore } = this.rootStore;
     if (gameStore && zkey && roomStore.config) {

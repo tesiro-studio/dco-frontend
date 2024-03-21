@@ -14,10 +14,6 @@ const useExecuteMyActions = () => {
           boardStore.executedMyAction();
           return await boardStore.endTurn();
         }
-        // case ActionKind.HeroSkill: {
-        //   executeStore.setHeroSkillEvent(true, () => boardStore.executedMyAction());
-        //   break;
-        // }
         default: {
           boardStore.executedMyAction();
           break;

@@ -32,6 +32,14 @@ export const parseRawAction = (rawAction: UploadAction): Action => {
     case ActionKind.HeroSkill: {
       return { kind: ActionKind.HeroSkill };
     }
+    case ActionKind.HeroAttack: {
+      return {
+        kind: ActionKind.HeroAttack,
+        card: 0,
+        target: rawAction.params,
+        position: 0,
+      };
+    }
   }
   return { kind: ActionKind.Defeat }
 };

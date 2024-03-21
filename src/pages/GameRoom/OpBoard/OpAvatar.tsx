@@ -36,6 +36,11 @@ const OpAvatar: React.FC = () => {
           isOpHero: true,
         })
       }
+      if (executeStore.executer?.event === CardEventType.HeroAttack) {
+        executeStore.setMyHeroAttackTarget({
+          isOpHero: true,
+        })
+      }
     }
   }
 
@@ -46,11 +51,11 @@ const OpAvatar: React.FC = () => {
       canSelect: Boolean(executeStore.availableTargets?.opHeroCanSelected),
       selected: from?.isOpHero || to?.isOpHero,
       effect: selected ? executeStore.executer?.effect ?? EffectType.None : EffectType.None,
+      isAttacker: from?.isOpHero,
     }
   }, [executeStore.executer?.from, executeStore.executer?.to]);
 
   const heroKind = Number(boardStore.ophero.kind) as HeroKind;
-  console.log('-----', opHeroSelectable);
   return (
     <Center pos={'relative'}>
       <ChakraBox
@@ -69,7 +74,7 @@ const OpAvatar: React.FC = () => {
         pos={'relative'}
         transition={'0.3s'}
         transform={opHeroSelectable.canSelect ? 'scale(1.05)' : 'scale(1)'}
-        filter={getEffectShadowColor(opHeroSelectable.effect)}
+        filter={opHeroSelectable.isAttacker ? 'drop-shadow(0px 2px 10px #FFAC0B)' : getEffectShadowColor(opHeroSelectable.effect)}
         pointerEvents={opHeroSelectable.canSelect ? 'auto' : 'none'}
       >
         {Boolean(boardStore.ophero.shield) && <HeroShield shield={Number(boardStore.ophero.shield)} />}

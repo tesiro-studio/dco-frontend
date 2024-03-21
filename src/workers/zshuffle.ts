@@ -10,7 +10,6 @@ class ZShuffle {
   callback<T> (_name: string): Promise<T> {
     return new Promise((resolve, reject) => {
       worker.onmessage = (response: MessageEvent<ZShuffleWorkerResponse>) => {
-        // console.log(`@@ ${name} => `, response.data);
         const { result, error } = response.data;
         if (error) {
           reject(error);

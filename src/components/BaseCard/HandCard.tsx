@@ -17,17 +17,16 @@ const HandCard = ({ cardId, index, selected = false, onSelect, ml, locked = fals
   const cardStyle = useMemo(() => {
     if (selected) {
       return {
-        initial: { scale: 0.8, opacity: 0  },
-        animate: { scale: 1.1, opacity: 1  },
+        initial: { y: -50, opacity: 0.5  },
+        animate: { y: 0, scale: 1.1, opacity: 1  },
         exit: disabledExitEffect ? {} : { scale: 0.8, opacity: 0 },
         whileHover: {},
       }
     }
     return {
-      initial: { scale: 0.8, opacity: 0  },
-      animate: { scale: 1, opacity: 1  },
-      exit: disabledExitEffect ? {} : { scale: 0.8, opacity: 0 },
-      whileHover: { zIndex: 100, y: '-20px', scale: 1.1 }
+      initial: { y: -50, opacity: 0.5  },
+      animate: { y: 0, scale: 1, opacity: 1  },
+      whileHover: { zIndex: 100, y: -20, scale: 1.1 }
     }
   }, [selected, locked]);
 

@@ -105,6 +105,14 @@ const OpBoard: React.FC = () => {
           })
           break;
         }
+        case ActionKind.HeroAttack: {
+          executeStore.setOpHeroAttackEvent(applyAction.target ?? 0, async () => {
+            await gameStore.applyAction(applyAction);
+            await delay(1000);
+            await boardStore.completeOpAction();
+          })
+          break;
+        }
         default: {
           console.log('action:', action);
         }
