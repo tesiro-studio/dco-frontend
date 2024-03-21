@@ -20,7 +20,7 @@ export class Hero {
     this.currentMana = mana;
     this.shield = 0n;
     this.useSkill = 1n;
-    this.hp = 30n;
+    this.hp = 20n;
     this.weaponKind = 0n;
     this.weaponAttack = 0n;
     this.weaponDurability = 0n;
@@ -91,8 +91,8 @@ export class Hero {
 
   heal(amount: bigint) {
     this.hp += amount;
-    if (this.hp > 30n) {
-      this.hp = 30n;
+    if (this.hp > 20n) {
+      this.hp = 20n;
     }
   }
 }
