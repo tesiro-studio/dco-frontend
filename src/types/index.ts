@@ -116,6 +116,13 @@ export type UploadAction = {
   rtoken: (Hex | number)[];
 };
 
+export type ActionRecord = {
+  fromHero: boolean;
+  cardId: CardKind;
+  action: UploadAction;
+  isMyRecord: boolean;
+}
+
 export type RToken = {
   card: [Hex, Hex];
   proof: Hex;
@@ -126,8 +133,6 @@ export type BoardCardType = {
   attrs: Card;
   turn: number;
 }
-
-export type BattleAction = { initiator: string, targets: number[] };
 
 export const enum CardEventType {
   Summon,

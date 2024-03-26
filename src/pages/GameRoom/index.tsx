@@ -17,6 +17,7 @@ import ChakraBox, { ChakraImg } from '@/components/ChakraBox';
 import useExecuteMyActions from '@/hooks/useExecuteMyActions';
 import SummonLayer from './SummonLayer';
 import EffectLayer from './EffectLayer';
+import Records from './Records';
 
 const GameRoom: React.FC = () => {
   const [scope, animate] = useAnimate();
@@ -66,6 +67,8 @@ const GameRoom: React.FC = () => {
               gridTemplateColumns={'200px 300px 1fr 300px 200px'}
               gridTemplateRows={'200px 1fr 1fr 200px'}
             >
+
+              <Records />
               <OpBoard />
               <MyBoard />
             </ChakraBox>

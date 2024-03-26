@@ -1,5 +1,5 @@
 import tcg from "@/services/tcg";
-import { ActionKind, PulledCardType, RToken, UploadAction } from "@/types";
+import { ActionKind, PulledCardType, RToken, ActionRecord, UploadAction, CardKind } from "@/types";
 import { computed, makeAutoObservable, runInAction, toJS } from "mobx";
 import { zeroHash } from "viem";
 
@@ -8,10 +8,10 @@ import zhuffle from "@/workers/zshuffle";
 import { parseRawAction } from "@/utils/action";
 
 export class BoardStore {
-  myActions: UploadAction[] = [];
-  opActions: UploadAction[] = [];
-  uploadActions: UploadAction[] = [];
-  records: UploadAction[] = [];
+  myActions: ActionRecord[] = [];
+  opActions: ActionRecord[] = [];
+  uploadActions: ActionRecord[] = [];
+  records: ActionRecord[] = [];
 
   rootStore: RootStore;
   constructor (rootStore: RootStore) {
@@ -80,7 +80,12 @@ export class BoardStore {
       const rtoken = await zhuffle.reveal([zkey.secret, toJS(myCardStore.myShuffledCards[index])]) as RToken;
       action.rtoken = [rtoken.card[0], rtoken.card[1]];
       runInAction(() => {
-        this.myActions.push(action);
+        this.myActions.push({
+          cardId: Number(card.cardId),
+          fromHero: false,
+          isMyRecord: true,
+          action,
+        });
       })
     }
   }
@@ -100,13 +105,18 @@ export class BoardStore {
       const { boardHashAfter } = await gameStore.applyAction(applyAction);
       action.stateHash = boardHashAfter
       runInAction(() => {
-        this.myActions.push(action);
+        this.myActions.push({
+          cardId: CardKind.None,
+          fromHero: false,
+          isMyRecord: true,
+          action,
+        });
       })
     }
   }
 
   async addMyAttackAction (position: number, target: number) {
-    const { gameStore } = this.rootStore;
+    const { gameStore, myCardStore } = this.rootStore;
     if (gameStore) {
       const action = {
         kind: ActionKind.MinionAttack,
@@ -120,7 +130,12 @@ export class BoardStore {
       const { boardHashAfter } = await gameStore.applyAction(applyAction);
       action.stateHash = boardHashAfter;
       runInAction(() => {
-        this.myActions.push(action);
+        this.myActions.push({
+          cardId: Number(myCardStore.boardCards[position].attrs.id) ?? CardKind.None,
+          fromHero: false,
+          isMyRecord: true,
+          action,
+        });
       })
     }
   }
@@ -140,7 +155,12 @@ export class BoardStore {
       const { boardHashAfter } = await gameStore.applyAction(applyAction);
       action.stateHash = boardHashAfter;
       runInAction(() => {
-        this.myActions.push(action);
+        this.myActions.push({
+          cardId: CardKind.None,
+          isMyRecord: true,
+          fromHero: true,
+          action,
+        });
       })
     }
   }
@@ -152,17 +172,17 @@ export class BoardStore {
       const nextTurnCardAmount = 4 + Math.floor((roomStore.config.startWithOp ? turns : turns + 1)  / 2);
       const shuffledCard = toJS(opCardStore.opShuffledCards[nextTurnCardAmount - 1]);
       const opsNext = await zhuffle.reveal([zkey.secret, shuffledCard]) as RToken;
-      const uploadActions = toJS(this.uploadActions);
+      const uploadActions = this.uploadActions.map(upload => toJS(upload.action));
       const isUploaded = await tcg.uploadActions(uploadActions, opsNext);
       if (isUploaded) {
         runInAction(() => {
-          this.records = this.records.concat(uploadActions);
+          this.records = this.records.concat(toJS(this.uploadActions));
           this.uploadActions = [];
         });
       } else {
         const prevAction = this.uploadActions.pop();
         gameStore.revertToSnapshot();
-        prevAction?.kind === ActionKind.EndTurn && (gameStore.turns -= 1);
+        prevAction?.action.kind === ActionKind.EndTurn && (gameStore.turns -= 1);
       }
     }
   }
@@ -176,17 +196,24 @@ export class BoardStore {
     }
   }
 
-  addOpActions (opActions: UploadAction[]) {
+  addOpActions (opActions: ActionRecord[]) {
     runInAction(() => {
-      this.opActions = opActions.map(action => ({ ...action, rtoken: [...action.rtoken]}));
+      this.opActions = opActions.map(opAction => ({
+        ...opAction,
+        action: {
+          ...opAction.action,
+          rtoken: [...opAction.action.rtoken]
+        }
+      }));
     })
   }
 
-  async completeOpAction () {
+  async completeOpAction (cardId?: CardKind) {
     runInAction(() => {
       if (this.opActions.length) {
         const action = this.opActions.shift();
-        this.records.push(action as UploadAction);
+        if (cardId && action) action.cardId = cardId;
+        this.records.push(action as ActionRecord);
         this.uploadActions = [];
       }
     })
@@ -205,7 +232,12 @@ export class BoardStore {
     const applyAction = parseRawAction(action);
     await gameStore.applyAction(applyAction);
     runInAction(() => {
-      this.uploadActions.push(action);
+      this.uploadActions.push({
+        cardId: CardKind.None,
+        fromHero: false,
+        isMyRecord: true,
+        action,
+      });
     })
   }
 
@@ -223,7 +255,18 @@ export class BoardStore {
     const { boardHashAfter } = await gameStore.applyAction(applyAction);
     action.stateHash = boardHashAfter;
     runInAction(() => {
-      this.myActions.push(action);
+      this.myActions.push({
+        cardId: CardKind.None,
+        fromHero: true,
+        isMyRecord: true,
+        action,
+      });
+    })
+  }
+
+  addRecords (records: ActionRecord[]) {
+    runInAction(() => {
+      this.records = records;
     })
   }
 }

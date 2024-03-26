@@ -26,7 +26,7 @@ const HandCard = ({ cardId, index, selected = false, onSelect, ml, locked = fals
     return {
       initial: { y: -50, opacity: 0.5  },
       animate: { y: 0, scale: 1, opacity: 1  },
-      whileHover: { zIndex: 100, y: -20, scale: 1.1 }
+      whileHover: { zIndex: 100, y: -20 }
     }
   }, [selected, locked]);
 

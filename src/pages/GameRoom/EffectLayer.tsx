@@ -1,5 +1,6 @@
 import AttackEffect from '@/components/Effect/AttackEffect';
 import BuffEffect from '@/components/Effect/BuffEffect';
+import DebuffEffect from '@/components/Effect/DebuffEffect';
 import SkillEffect from '@/components/Effect/SkillEffect';
 import { store } from '@/stores/RootStore';
 import { EffectType } from '@/types';
@@ -81,6 +82,13 @@ const EffectLayer: React.FC<IEffectLayer> = ({ animate }) => {
       )}
       {toCardPosition?.effect === EffectType.Attack && (
         <AttackEffect
+          top={toCardPosition.y}
+          left={toCardPosition.x}
+          onEnd={() => executeStore.done()}
+        />
+      )}
+      {toCardPosition?.effect === EffectType.Debuff && (
+        <DebuffEffect
           top={toCardPosition.y}
           left={toCardPosition.x}
           onEnd={() => executeStore.done()}

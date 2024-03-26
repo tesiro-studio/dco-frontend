@@ -22,8 +22,9 @@ class TCG {
         {
           x: zkey.publicxy[0],
           y: zkey.publicxy[1],
-        }
-      ]
+        },
+        BigInt(1),
+      ],
     );
     const receipt = await waitForTransactionReceipt(config, { hash: txHash });
     const roomId = await read('currentRoom', [address]) as unknown as ViewReturnType<'currentRoom'>[0];
@@ -127,7 +128,9 @@ class TCG {
 
   async quitGame () {
     try {
-      await write('quitGame', []);
+      const txHash = await write('quitGame', []);
+      const receipt = await waitForTransactionReceipt(config, { hash: txHash });
+      console.log(receipt);
     } catch (error) {
       console.log(error);
     }

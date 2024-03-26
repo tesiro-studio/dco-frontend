@@ -21,19 +21,8 @@ export default [
     "type": "error"
   },
   {
-        "inputs": [],
-        "name": "ActionMismatch",
-        "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "target",
-        "type": "address"
-      }
-    ],
-    "name": "AddressEmptyCode",
+    "inputs": [],
+    "name": "ActionMismatch",
     "type": "error"
   },
   {
@@ -52,27 +41,6 @@ export default [
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "implementation",
-        "type": "address"
-      }
-    ],
-    "name": "ERC1967InvalidImplementation",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "ERC1967NonPayable",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "FailedInnerCall",
-    "type": "error"
-  },
-  {
     "inputs": [],
     "name": "InvalidAction",
     "type": "error"
@@ -85,27 +53,6 @@ export default [
   {
     "inputs": [],
     "name": "InvalidInitialization",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "modName",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "prevModAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "nextModAddress",
-        "type": "address"
-      }
-    ],
-    "name": "InvalidModuleAddress",
     "type": "error"
   },
   {
@@ -129,17 +76,6 @@ export default [
     "type": "error"
   },
   {
-    "inputs": [
-      {
-        "internalType": "string",
-        "name": "modName",
-        "type": "string"
-      }
-    ],
-    "name": "ModuleNotExists",
-    "type": "error"
-  },
-  {
     "inputs": [],
     "name": "NotInitializing",
     "type": "error"
@@ -152,22 +88,6 @@ export default [
   {
     "inputs": [],
     "name": "Timeout",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "UUPSUnauthorizedCallContext",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "slot",
-        "type": "bytes32"
-      }
-    ],
-    "name": "UUPSUnsupportedProxiableUUID",
     "type": "error"
   },
   {
@@ -236,57 +156,6 @@ export default [
       }
     ],
     "name": "Initialized",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "bytes4",
-        "name": "sig",
-        "type": "bytes4"
-      }
-    ],
-    "name": "ModuleFunctionAttached",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "bytes4",
-        "name": "sig",
-        "type": "bytes4"
-      }
-    ],
-    "name": "ModuleFunctionDetached",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "name",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "module",
-        "type": "address"
-      }
-    ],
-    "name": "ModuleUpdated",
     "type": "event"
   },
   {
@@ -409,19 +278,6 @@ export default [
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "implementation",
-        "type": "address"
-      }
-    ],
-    "name": "Upgraded",
-    "type": "event"
-  },
-  {
     "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
     "outputs": [
@@ -435,16 +291,34 @@ export default [
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "UPGRADE_INTERFACE_VERSION",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
+        "internalType": "uint256",
+        "name": "roomId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "nthCard",
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "name": "claimReveal",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "roomId",
+        "type": "uint256"
+      }
+    ],
+    "name": "claimStartGameTimeout",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -458,6 +332,25 @@ export default [
     "name": "claimTurnTimeout",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "player",
+        "type": "address"
+      }
+    ],
+    "name": "currentRoom",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -835,6 +728,86 @@ export default [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "roomId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "turn",
+        "type": "uint256"
+      }
+    ],
+    "name": "getActions",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "enum ITCGStorage.ActionKind",
+            "name": "kind",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint128",
+            "name": "cardId",
+            "type": "uint128"
+          },
+          {
+            "internalType": "uint256",
+            "name": "params",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nthDrawn",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "stateHash",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256[2]",
+            "name": "rtoken",
+            "type": "uint256[2]"
+          }
+        ],
+        "internalType": "struct ITCGStorage.Action[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "roomId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "nth",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRevealCard",
+    "outputs": [
+      {
+        "internalType": "uint256[2]",
+        "name": "card",
+        "type": "uint256[2]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "role",
         "type": "bytes32"
@@ -846,6 +819,30 @@ export default [
         "internalType": "bytes32",
         "name": "",
         "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "roomId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "playerIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "getShuffledCards",
+    "outputs": [
+      {
+        "internalType": "uint256[4][20]",
+        "name": "shuffled",
+        "type": "uint256[4][20]"
       }
     ],
     "stateMutability": "view",
@@ -896,29 +893,6 @@ export default [
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "shuffleVerifier",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "revealVerifier",
-        "type": "address"
-      },
-      {
-        "internalType": "contract MimcSponge",
-        "name": "mimcSponge",
-        "type": "address"
-      }
-    ],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "preset",
         "type": "uint256"
@@ -939,6 +913,11 @@ export default [
         "internalType": "struct EdOnBN254.Point",
         "name": "pk",
         "type": "tuple"
+      },
+      {
+        "internalType": "uint256",
+        "name": "heroSubId",
+        "type": "uint256"
       }
     ],
     "name": "joinGame",
@@ -948,12 +927,12 @@ export default [
   },
   {
     "inputs": [],
-    "name": "proxiableUUID",
+    "name": "maxRoolId",
     "outputs": [
       {
-        "internalType": "bytes32",
+        "internalType": "uint256",
         "name": "",
-        "type": "bytes32"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -987,6 +966,36 @@ export default [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "uint256[2]",
+            "name": "card",
+            "type": "uint256[2]"
+          },
+          {
+            "internalType": "bytes",
+            "name": "proof",
+            "type": "bytes"
+          }
+        ],
+        "internalType": "struct ITCGStorage.RevealToken",
+        "name": "tokens",
+        "type": "tuple"
+      }
+    ],
+    "name": "revealStart",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "bytes32",
         "name": "role",
         "type": "bytes32"
@@ -1005,30 +1014,125 @@ export default [
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "roomId",
+        "type": "uint256"
+      }
+    ],
+    "name": "roomInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "player1",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "player2",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "player1Cards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "player2Cards",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "turns",
+            "type": "uint256"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "x",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "y",
+                "type": "uint256"
+              }
+            ],
+            "internalType": "struct EdOnBN254.Point[3]",
+            "name": "pk",
+            "type": "tuple[3]"
+          },
+          {
+            "internalType": "bool[2]",
+            "name": "shuffleVerified",
+            "type": "bool[2]"
+          },
+          {
+            "internalType": "bool",
+            "name": "player2sTurnStart",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint256",
+            "name": "stateHash",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastUpdateTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum ITCGStorage.GameState",
+            "name": "state",
+            "type": "uint8"
+          },
+          {
+            "internalType": "bool[2]",
+            "name": "revealedFirst",
+            "type": "bool[2]"
+          },
+          {
+            "internalType": "bool[2]",
+            "name": "shuffleRemasked",
+            "type": "bool[2]"
+          },
+          {
+            "internalType": "uint256[2]",
+            "name": "heroSubIndex",
+            "type": "uint256[2]"
+          }
+        ],
+        "internalType": "struct ITCGStorage.RoomDTO",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "contract ZgModule",
         "name": "module",
         "type": "address"
       }
     ],
     "name": "setModule",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "disableShuffleVerify",
-        "type": "bool"
-      },
-      {
-        "internalType": "bool",
-        "name": "disableRevealVerify",
-        "type": "bool"
-      }
-    ],
-    "name": "setShuffleRevealConfig",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1065,6 +1169,24 @@ export default [
         "internalType": "bool",
         "name": "",
         "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "turnTimeOut",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "turn",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "shuffle",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1190,35 +1312,5 @@ export default [
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "uint256",
-              "name": "index",
-              "type": "uint256"
-          },
-          {
-              "components": [
-                  {
-                      "internalType": "uint256[2]",
-                      "name": "card",
-                      "type": "uint256[2]"
-                  },
-                  {
-                      "internalType": "bytes",
-                      "name": "proof",
-                      "type": "bytes"
-                  }
-              ],
-              "internalType": "struct ITCGStorage.RevealToken",
-              "name": "token",
-              "type": "tuple"
-          }
-      ],
-      "name": "revealStart",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-  },
+  }
 ] as const;

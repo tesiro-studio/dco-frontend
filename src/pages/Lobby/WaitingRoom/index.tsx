@@ -1,5 +1,5 @@
 import { VStack, Text, Center } from '@chakra-ui/react';
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { observer } from 'mobx-react-lite';
 
 import AppButton from '@/components/AppButton';
@@ -14,13 +14,14 @@ import { show } from '@/utils/notification';
 
 const WaitingRoom: React.FC = () => {
   const { roomStore } = store;
+  const [quiting, setQuiting] = useState(false);
   const unwatch = useRef<() => void>();
   const navigate = useNavigate();
   const isVisible = usePageVisibility();
 
   const handleWatchGame = async () => {
     const { roomInfo } = roomStore;
-    if (roomInfo) {
+    if (roomInfo && !quiting) {
       const gameConfig = getGameConfig(roomInfo, roomStore.player.address);
       switch (roomInfo.state) {
         case GameState.WaitingForPlayers: {
@@ -94,6 +95,18 @@ const WaitingRoom: React.FC = () => {
     }
   }
 
+  const handleQuitMatch = async () => {
+    setQuiting(true);
+    try {
+      unwatch.current?.();
+      await tcg.quitGame();
+    } catch (error) {
+      console.log(error);
+    }
+    await roomStore.check();
+    setQuiting(false);
+  }
+
   useEffect(() => {
     unwatch.current?.();
     handleWatchGame();
@@ -123,7 +136,10 @@ const WaitingRoom: React.FC = () => {
         </VStack>
         <Center pos={'relative'} zIndex={10}>
           {!roomStore.matched && (
-            <AppButton onClick={() => tcg.quitGame()}>
+            <AppButton
+              onClick={handleQuitMatch}
+              isDisabled={quiting}
+            >
               CANCEL
             </AppButton>
           )}

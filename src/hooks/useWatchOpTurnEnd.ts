@@ -1,5 +1,6 @@
 import tcg from "@/services/tcg";
 import { store } from "@/stores/RootStore";
+import { ActionKind, ActionRecord } from "@/types";
 import delay from "delay";
 import { useEffect } from "react";
 
@@ -13,13 +14,18 @@ const useWatchOpTurnEnd = () => {
       if (!store.boardStore.isMyTurn) {
         await store.opCardStore.pullCard(turns);
         await delay(1000);
-        const opActions = actions.map(action => ({
-          kind: action.kind,
+        const opActions: ActionRecord[] = actions.map(action => ({
+          isMyRecord: false,
           cardId: Number(action.cardId),
-          params: Number(action.params),
-          nthDrawn: Number(action.nthDrawn),
-          stateHash: action.stateHash as any,
-          rtoken: [...action.rtoken] as any,
+          fromHero: [ActionKind.HeroAttack, ActionKind.HeroSkill].includes(action.kind),
+          action: {
+            kind: action.kind,
+            cardId: Number(action.cardId),
+            params: Number(action.params),
+            nthDrawn: Number(action.nthDrawn),
+            stateHash: action.stateHash as any,
+            rtoken: [...action.rtoken] as any,
+          }
         }))
         boardStore.addOpActions(opActions);
       }

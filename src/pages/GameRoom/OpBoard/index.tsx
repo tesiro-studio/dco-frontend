@@ -62,15 +62,15 @@ const OpBoard: React.FC = () => {
   }
 
   const handleAction = async () => {
-    const [action] = toJS(boardStore.opActions);
-    if (action) {
+    const [opAction] = toJS(boardStore.opActions);
+    if (opAction) {
       await delay(1500);
-      const applyAction = parseRawAction(action);
-      switch (action.kind) {
+      const applyAction = parseRawAction(opAction.action);
+      switch (opAction.action.kind) {
         case ActionKind.PlayCard: {
           // 對方出牌步驟： 盤面載入動作, 將手牌對應位置卡牌添上cardId預備做翻牌效果, 從手牌拉出並翻牌, 將卡牌加入盤面並刷新裝態
           await gameStore.applyAction(applyAction);
-          await addCardToBoard(action.nthDrawn, action.cardId, applyAction.target);
+          await addCardToBoard(opAction.action.nthDrawn, opAction.action.cardId, applyAction.target);
           break;
         }
         case ActionKind.EndTurn: {
@@ -92,7 +92,7 @@ const OpBoard: React.FC = () => {
             applyAction.target ?? 0,
             async () => {
               await delay(1000);
-              await boardStore.completeOpAction();
+              await boardStore.completeOpAction(Number(id));
             }
           )
           break;
@@ -114,7 +114,7 @@ const OpBoard: React.FC = () => {
           break;
         }
         default: {
-          console.log('action:', action);
+          console.log('action:', opAction.action);
         }
       }
     }

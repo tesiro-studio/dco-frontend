@@ -7,9 +7,9 @@ const useExecuteMyActions = () => {
   const { boardStore } = store;
 
   const handleAction = async () => {
-    const [action] = toJS(boardStore.myActions);
-    if (action) {
-      switch (action.kind) {
+    const [myAction] = toJS(boardStore.myActions);
+    if (myAction) {
+      switch (myAction.action.kind) {
         case ActionKind.EndTurn: {
           boardStore.executedMyAction();
           return await boardStore.endTurn();
