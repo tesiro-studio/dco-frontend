@@ -42,7 +42,8 @@ const Records: React.FC = () => {
         key={action.action.stateHash}
         bg={recordStyle(action.isMyRecord).main}
         // p={'0.25rem'}
-        boxSize={'100%'}
+        w={'100%'}
+        h={`${(100 - 15) / 6}%`}
         borderRadius={'0.5rem'}
         pos={'relative'}
         display={'flex'}
